@@ -33,3 +33,9 @@ Push a `main` → GitHub Pages (Actions o branch `gh-pages`)
 > No es recomendación de inversión. Última actualización: Jul 2026 (BCRP 05-08-2026).
 
 — kiltro-dev • Aug 2026
+
+---
+## Nuevo: Crecimiento 2021-2026
+- `crecimiento.html` — Dashboard PIB real 2021-2026 para Chile, Colombia, Brasil, México, Perú, Argentina y promedio LatAm
+- Datos: WB GEP Jun-2025, BCCh Anuario 2024 (Chile 11.7% 2021 y 2.6% 2024), CEPAL Balance 2025, IMF WEO Abr-2026
+- Gráfico crecimiento anual + índice acumulado 2020=100 + barras 2024 vs 2025f
