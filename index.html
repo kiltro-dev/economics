@@ -23,6 +23,11 @@
 </header>
 
 <main class="container">
+  <div class="card">
+      <h3>Ranking — promedio del periodo</h3>
+      <p class="card-desc">Promedio anual del periodo seleccionado.</p>
+      <div id="barChart" class="chart" style="height:auto;min-height:320px"></div>
+
   <section class="card card--hero">
     <div class="chart-toolbar" id="filterDock">
       <div class="toolbar-left">
@@ -60,18 +65,12 @@
   <div class="insight-caption" id="insightBox"></div>
   <div class="kpi-grid" id="kpiGrid"></div>
 
-  <section class="grid-2">
-    <div class="card">
-      <h3>Ranking — promedio del periodo</h3>
-      <p class="card-desc">Promedio anual del periodo seleccionado.</p>
-      <div id="barChart" class="chart" style="height:auto;min-height:320px"></div>
-    </div>
-    <div class="card">
+  <section class="grid-2" style="grid-template-columns:1fr">
+  <div class="card">
       <h3>Acumulado desde inicio</h3>
       <p class="card-desc">Índice inicio = 100.</p>
       <div id="cumChart" class="chart" style="height:auto;min-height:320px"></div>
-    </div>
-  </section>
+</section>
 
   <section class="card">
     <div class="card-header">
