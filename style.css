@@ -91,8 +91,10 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .insight-caption strong{color:var(--ink2)}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:10px;position:relative}
 .card--hero{padding:8px 14px 6px;margin-top:8px}
-.card--hero .chart{height:520px;margin-bottom:0}
+.card--hero .chart{height:420px;margin-bottom:0}
 #mainChart{margin-bottom:0}
+@media(max-width:900px){.card--hero .chart{height:380px}}
+@media(max-width:600px){.card--hero .chart{height:340px}}
 @media(max-width:700px){.card--hero .chart{height:420px}}
 .card-header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
 .card h2{margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;letter-spacing:-0.015em;line-height:1.1;font-weight:500}
