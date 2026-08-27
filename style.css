@@ -91,8 +91,9 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .insight-caption strong{color:var(--ink2)}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:10px;position:relative}
 .card--hero{padding:8px 14px 6px;margin-top:8px}
-.card--hero .chart{height:clamp(340px, 42vh, 440px);margin-bottom:0}
-#mainChart{margin-bottom:0}
+.card--hero .chart{height:auto;min-height:340px;margin-bottom:0}
+#mainChart{height:auto;min-height:340px}
+#mainChart svg{width:100%;height:auto;display:block}
 .card-header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
 .card h2{margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;letter-spacing:-0.015em;line-height:1.1;font-weight:500}
 .card h2 em{font-style:normal;color:var(--muted);font-weight:500}

@@ -418,11 +418,11 @@ function renderMainChart(){
   const div=document.getElementById("mainChart");
   div.innerHTML="";
   const width=div.clientWidth;
-  const height=440;
+  const height=Math.round(Math.max(340, Math.min(460, width * 0.46)));
   const margin={top:14,right:16,bottom:28,left:44};
   const w=width-margin.left-margin.right;
   const h=height-margin.top-margin.bottom;
-  const svg=d3.select("#mainChart").append("svg").attr("width",width).attr("height",height);
+  const svg=d3.select("#mainChart").append("svg").attr("viewBox",`0 0 ${width} ${height}`).attr("preserveAspectRatio","xMidYMid meet").style("width","100%").style("height","auto").attr("width",width).attr("height",height);
   const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
   const years=getFilteredYears();
   xMain=d3.scaleLinear().domain([startYear, endYear]).range([0,w]);
