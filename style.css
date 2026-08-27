@@ -144,6 +144,9 @@ table.data tbody tr:hover td{background:#131a24}
 #mainChart .axis text, #barChart .axis text, #cumChart .axis text, .chart .axis text{fill:var(--muted2) !important;font-size:10.5px;font-family:Inter, sans-serif}
 #mainChart .axis path, #mainChart .axis line, #barChart .axis path, #barChart .axis line, #cumChart .axis path, #cumChart .axis line, .chart .axis path, .chart .axis line{stroke:var(--muted2) !important;opacity:0.35}
 #mainChart .grid line, #barChart .grid line, #cumChart .grid line{stroke:var(--grid);stroke-dasharray:2 3;opacity:0.55}
+#mainChart .grid line:first-child, #barChart .grid line:first-child, #cumChart .grid line:first-child{display:none}
+#mainChart .axis path.domain, #barChart .axis path.domain, #cumChart .axis path.domain{stroke:var(--muted2) !important;opacity:0.35}
+#mainChart .axis.axis--x path.domain{display:none}
 .line{fill:none;stroke-linejoin:round;stroke-linecap:round}
 
 /* highlight — professional */
