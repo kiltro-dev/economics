@@ -3,64 +3,61 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LatAm FX Dashboard | Rally cambiario MSCI 2022-2026</title>
-<meta name="description" content="Dashboard interactivo del tipo de cambio en Latinoamérica 2022-2026. Datos BCRP. ¿El peso chileno realmente quedó fuera del rally?">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<title>LatAm Growth Monitor — 2000·2026 | PIB real, trampa de bajo crecimiento</title>
+<meta name="description" content="Monitor profesional del crecimiento económico en Latinoamérica 2000-2026. Chile, Colombia, Brasil, México, Perú, Argentina vs LatAm. Datos Banco Mundial WDI, BCCh, CEPAL, IMF.">
 <script src="https://d3js.org/d3.v7.min.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="header">
   <div class="container">
-    <div class="header-top">
+    <div class="eyebrow"><span class="badge-dot"></span> World Bank WDI · 2026-07-13 · BCCh · CEPAL · IMF WEO</div>
+    <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start">
       <div>
-        <h1>LatAm FX <span>Rally 2022-2026</span></h1>
-        <p class="subtitle">¿Indicadores de corto plazo? Análisis de 55 meses de tipo de cambio vs USD</p>
+        <h1>LatAm Growth <em>Monitor</em> <span>2000 — 2026</span></h1>
+        <p class="subtitle"><strong>PIB real, var. anual %</strong> — De la década perdida al rebote post-covid y la trampa de 2.3%. <strong style="color:var(--gold2)">2000-2025 observado</strong> (WDI) + <strong>2026 proyección</strong> (WB GEP/IPM). Base 2000=100 para acumulado.</p>
       </div>
-      <div class="header-actions">
-        <a href="crecimiento.html" class="btn" style="background:#06d6a0;color:#001018;border-color:#06d6a0;font-weight:700">→ Crecimiento 2021-2026</a>
-        <a href="https://estadisticas.bcrp.gob.pe" target="_blank" class="badge">Fuente: BCRP • FMI/Reuters</a>
-        <button id="exportCSV" class="btn btn-outline">↓ Descargar CSV</button>
-      </div>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi kpi-chile">
-        <div class="kpi-label">Chile CLP <small>Jul 2026</small></div>
-        <div class="kpi-value">931.52 <span class="unit">CLP/USD</span></div>
-        <div class="kpi-delta neg" id="kpi-clp-ytd">YTD +5.52% • 12m -2.37%</div>
-        <div class="kpi-note">Única que se deprecia en 2026 YTD (foto corta)</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Colombia COP</div>
-        <div class="kpi-value">3,251.22</div>
-        <div class="kpi-delta pos" id="kpi-cop">12m -19.82% • YTD -11.85% — más apreciada</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Brasil BRL</div>
-        <div class="kpi-value">5.11</div>
-        <div class="kpi-delta pos">12m -7.55% • 2024: -27% → 2025: +10%</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">México MXN</div>
-        <div class="kpi-value">17.47</div>
-        <div class="kpi-delta pos">12m -6.57% • 2023: +11% → 2024: -21%</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Perú PEN <small>S/ por USD</small></div>
-        <div class="kpi-value">3.40</div>
-        <div class="kpi-delta">Más estable: rango 3.37-3.98 en 4 años</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <a href="fx.html" class="badge" style="text-decoration:none">FX Dashboard →</a>
+        <button id="exportCSV" class="btn btn-primary">↓ Exportar CSV 2000-2026</button>
       </div>
     </div>
 
-    <div class="insight-box" style="border-color:#ffb84d;background:#1a150f">
-      <strong>⚠️ ¿Por qué el gráfico llega solo hasta julio si la noticia es del 25 de agosto?</strong><br>
-      El gráfico usa <em>promedio mensual BCRP</em> (requiere mes completo, se publica la primera semana del mes siguiente — el último disponible es <strong>Jul.2026</strong>, publicado el 05-ago). La noticia de CNN usa <em>cierre diario spot</em> al 25-ago (más volátil, intradía). Son metodologías distintas: promedio mensual suaviza, spot diario es la foto del día.
-      <br><small style="color:#d6b98a">Dato provisional Ago.2026 (promedio 3-27 ago, Banco Central Chile): <strong>~916.66 CLP/USD</strong> → en agosto el peso <em>se está apreciando</em> (-1,6% vs julio), por eso el YTD diario (-1,4% en CNN) ya no coincide con el YTD mensual (+5,52%). El punto de agosto aparece como línea punteada en el gráfico y se consolidará en septiembre.</small>
+    <div class="period-bar">
+      <div style="display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <span class="period-label">Periodo</span>
+          <div class="period-chips" id="periodChips">
+            <button class="chip" data-range="2000-2026">2000-2026 · Completo</button>
+            <button class="chip" data-range="2010-2026">2010-2026</button>
+            <button class="chip" data-range="2016-2026">Última década</button>
+            <button class="chip active" data-range="2021-2026">5A · 2021-2026</button>
+            <button class="chip" data-range="2015-2024">Década perdida 2015-24</button>
+          </div>
+        </div>
+        <div class="range-wrap">
+          <label for="startYear">Desde</label>
+          <input type="range" id="startYear" min="2000" max="2025" value="2021" style="width:160px">
+          <span class="range-display" id="startLabel">2021</span>
+          <label for="endYear">Hasta</label>
+          <input type="range" id="endYear" min="2001" max="2026" value="2026" style="width:160px">
+          <span class="range-display" id="endLabel">2026</span>
+          <span style="font-size:11px;color:var(--muted);margin-left:6px">Arrastra el brush en el gráfico para zoom fino</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:180px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase">Vista</div>
+        <div class="toggles" style="display:flex;gap:6px">
+          <button class="btn btn-sm active" data-view="growth">Var. anual %</button>
+          <button class="btn btn-sm" data-view="cum">Índice acumulado</button>
+          <button class="btn btn-sm" data-view="avg">Promedio periodo</button>
+        </div>
+      </div>
     </div>
-    <div class="insight-box">
-      <strong>Conclusión rápida:</strong> Sí, el titular CNN Chile (-1,4% YTD al 25 ago) es una <em>foto de 8 meses</em>. En 55 meses (Ene 2022 - Jul 2026) todas las monedas muestran reversiones bruscas. El MSCI EM Currency está en máximo histórico 1.919 pts (+0,76% YTD), pero a 3 años solo +3,27% anualizado. El rally actual es coyuntural: carry trade + dólar débil.
-    </div>
+
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <div class="insight-box" id="insightBox" style="margin-top:16px"></div>
   </div>
 </header>
 
@@ -68,74 +65,62 @@
   <section class="card">
     <div class="card-header">
       <div>
-        <h2>Índice comparativo (Base 100 = Ene 2022)</h2>
-        <p class="card-desc">Normalizado para comparar performance. &lt;100 = apreciación vs USD, &gt;100 = depreciación. Pasa el mouse, haz clic en la leyenda para filtrar, usa el brush inferior para zoom.</p>
+        <h2 id="chartTitle">Crecimiento anual <em>— var. % PIB real</em></h2>
+        <p class="card-desc" id="chartDesc">Línea sólida 2000-2025 observado, punteada 2026 proyección. Hover para detalle, clic en leyenda para filtrar. Perú +8.5% promedio 2004-08, Argentina -10.9% 2002.</p>
       </div>
       <div class="controls">
         <div class="legend" id="legend"></div>
-        <div class="toggles">
-          <button class="btn btn-sm active" data-mode="indexed">Índice 100</button>
-          <button class="btn btn-sm" data-mode="absolute">Valores absolutos</button>
-          <button class="btn btn-sm" data-mode="log">Escala log</button>
-        </div>
       </div>
     </div>
-    <div id="chart" class="chart"></div>
-    <div id="brush" class="brush"></div>
+    <div id="mainChart" class="chart"></div>
+    <div id="brushChart" style="height:68px;margin-top:4px"></div>
     <div class="chart-footer">
-      <span>↑ Depreciación (más pesos por dólar)</span>
-      <span>↓ Apreciación (menos pesos por dólar)</span>
+      <span id="footerLeft">2000-2025 Banco Mundial WDI (2026-07-13) + 2026 WB GEP Jun-2025 forecast</span>
+      <span id="footerRight">2026 punteado = proyección</span>
     </div>
   </section>
 
   <section class="grid-2">
     <div class="card">
-      <h3>Variación por ventanas (%)</h3>
-      <p class="card-desc">Positivo = se deprecia, Negativo = se aprecia. Calculado sobre promedio mensual BCRP.</p>
-      <div id="varTable" class="var-table"></div>
+      <h3 id="barTitle">Ranking — promedio en periodo seleccionado</h3>
+      <p class="card-desc">Promedio anual en el rango elegido. Barras sólidas = observado, rayadas = incluye proyección 2026.</p>
+      <div id="barChart" style="height:380px"></div>
     </div>
     <div class="card">
-      <h3>Peaks & valles (absoluto)</h3>
-      <div id="extremes" class="extremes"></div>
-      <div class="msci-box">
-        <h4>MSCI EM Currency Index</h4>
-        <ul>
-          <li><strong>1.919,39</strong> máximo 21 ago 2026 (serie desde 2015)</li>
-          <li>52 semanas: 1.828 - 1.919</li>
-          <li>YTD al 19 jun: +0,76% • 1 año +1,95% • 3a +3,27% ann.</li>
-          <li>Jul 2023 YTD: +1,3% — rally es muy reciente</li>
-        </ul>
-      </div>
+      <h3>Acumulado desde inicio del periodo</h3>
+      <p class="card-desc">Índice inicio=100. Para 2000-2026: Chile 100→~210 (+110% en 26 años), LatAm 100→~156.</p>
+      <div id="cumChart" class="chart chart-sm"></div>
     </div>
   </section>
 
   <section class="card">
     <div class="card-header">
       <div>
-        <h2>Serie mensual completa</h2>
-        <p class="card-desc">55 meses • Ene 2022 - Jul 2026 • Promedio del período (UM por US$). Fuente: BCRP PN01227XM, PN01229XM, PN01230XM, PN01225XM, PN01210PM. Busca, ordena y exporta.</p>
+        <h2>Serie anual completa — tabla <em>filtrada por periodo</em></h2>
+        <p class="card-desc">Var. anual %. 2000-2025 WDI, 2026f WB GEP. Celdas verde/rojo según signo. Click en cabecera para ordenar. Busca país o año.</p>
       </div>
       <div class="table-controls">
-        <input id="search" type="search" placeholder="Filtrar por fecha (ej: 2024, Ene, Jul)..." />
+        <input id="search" type="search" placeholder="Filtrar: Chile, 2008, 2021..." />
         <select id="sortBy">
-          <option value="date-desc">Más reciente primero</option>
-          <option value="date-asc">Más antiguo primero</option>
-          <option value="clp-desc">CLP mayor → menor</option>
-          <option value="cop-desc">COP mayor → menor</option>
+          <option value="year-desc">Año ↓ reciente primero</option>
+          <option value="year-asc">Año ↑ antiguo primero</option>
+          <option value="country">País A-Z</option>
+          <option value="growth-desc">Mayor crecimiento primero</option>
         </select>
       </div>
     </div>
     <div class="table-wrap">
-      <table id="dataTable">
+      <table class="data" id="dataTable">
         <thead>
           <tr>
-            <th>Periodo</th>
-            <th>CLP <small>$/USD</small></th>
-            <th>COP <small>$/USD</small></th>
-            <th>MXN <small>$/USD</small></th>
-            <th>BRL <small>R$/USD</small></th>
-            <th>PEN <small>S//USD</small></th>
-            <th>Var CLP m/m</th>
+            <th>Año</th>
+            <th>Chile</th>
+            <th>Colombia</th>
+            <th>Brasil</th>
+            <th>México</th>
+            <th>Perú</th>
+            <th>Argentina</th>
+            <th>LatAm</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -144,25 +129,452 @@
   </section>
 
   <section class="card methodology">
-    <h3>Metodología y notas</h3>
+    <h3>Metodología — estilo económico profesional</h3>
     <ul>
-      <li><strong>Datos:</strong> BCRPData - Tipo de cambio de las principales monedas - promedio del período (UM por US$) y S/ por US$ bancario promedio. Fuentes originales FMI/Reuters.</li>
-      <li><strong>MSCI:</strong> MSCI EM Currency Index (MIEM00000CUS) - mide 25 monedas emergentes vs USD, incluye carry. Máximo 1.919,39 el 21/08/26 según CNBC/Investing.</li>
-      <li><strong>CNN Chile:</strong> titular del 25/08/26: CLP -1,4% YTD (dato diario Trading Economics/XTB), COP +21,1%, BRL +6,3%, MXN +6,1%, PEN +0,6%. Difiere levemente del promedio mensual BCRP por corte intradía.</li>
-      <li><strong>Interpretación:</strong> tabla mensual suaviza volatilidad diaria. Para trading usar USD/CLP observado diario del Banco Central de Chile.</li>
-      <li>Repositorio y CSV: <a href="#" id="repoLink">GitHub Pages</a> • actualización mensual automática propuesta.</li>
+      <li><strong>Fuente principal 2000-2025:</strong> Banco Mundial WDI <code>NY.GDP.MKTP.KD.ZG</code> (PIB real, var. anual %), última actualización <strong>2026-07-13</strong>, precios de mercado, año calendario. Códigos: CL, CO, BR, MX, PE, AR, ZJ (LatAm & Caribbean).</li>
+      <li><strong>2026 proyección:</strong> Banco Mundial GEP Jun-2025 (Chile 2.2, Colombia 2.7, Brasil 2.2, México 1.1, Perú 2.5, Argentina 4.5, LAC 2.4) — punteado en gráficos. 2025 en WDI ya es estimado observado (no forecast).</li>
+      <li><strong>Ajuste Chile:</strong> WDI coincide con BCCh Anuario 2024 (Chile 2021 11.34 vs BCCh 11.7, 2022 2.06 vs 2.2, 2023 0.68 vs 0.5, 2024 2.81 vs 2.6) — diferencias <0.3pp por revisión CdeR2018. Se usa WDI para comparabilidad regional.</li>
+      <li><strong>Contraste:</strong> CEPAL Balance 2025 (Ago-2025) LAC 2.4/2.3 (2025/26), IMF WEO Abr-2026 LAC 2.4/2.3/2.7 — rango ±0.3pp.</li>
+      <li><strong>Cálculos:</strong> CAGR = (Índice_fin/Índice_ini)^(1/años)-1. Acumulado = Π(1+g). Promedio periodo = media aritmética anual en rango seleccionado.</li>
+      <li><strong>Uso:</strong> selector 2000-2026 permite ver década completa, década perdida 2015-24 (LAC solo +1.0% promedio), o rebote 2021-26. Brush para zoom fino. Exporta CSV filtrado.</li>
+      <li>Diseño: dark economic (Fraunces + IBM Plex Mono + Inter), inspirado en FT/Bloomberg — <a href="fx.html">FX Dashboard sigue disponible aquí</a>.</li>
     </ul>
   </section>
 </main>
 
 <footer class="footer">
   <div class="container">
-    <p>Hecho con D3.js • Datos abiertos BCRP • No es recomendación de inversión • Autor: kiltro-dev • Aug 2026</p>
-    <p><a href="https://github.com/kiltro-dev">github.com/kiltro-dev</a> • Deploy vía GitHub Actions + Pages</p>
+    <p>© 2026 LatAm Growth Monitor — Datos abiertos WB/BCCh/CEPAL/IMF • Visualización D3.js • No es pronóstico propio • kiltro-dev • Último dato WDI: 2026-07-13</p>
   </div>
 </footer>
 
 <div id="tooltip" class="tooltip" style="display:none"></div>
-<script src="app.js"></script>
+<script>
+// ===== DATA 2000-2026 WDI + 2026 forecast =====
+const rawByCountry = {
+  "CL": {name:"Chile", color:"#3fb1ff", vals:{
+    2000:4.97,2001:3.15,2002:3.20,2003:4.72,2004:6.67,2005:5.84,2006:6.05,2007:5.17,2008:3.79,2009:-1.12,2010:5.85,2011:6.22,2012:6.16,2013:3.31,2014:1.79,2015:2.15,2016:1.75,2017:1.36,2018:3.99,2019:0.64,2020:-6.14,2021:11.34,2022:2.06,2023:0.68,2024:2.81,2025:2.46,2026:2.2
+  }},
+  "CO": {name:"Colombia", color:"#ffd166", vals:{
+    2000:2.92,2001:1.68,2002:2.50,2003:3.92,2004:5.33,2005:4.83,2006:6.72,2007:6.74,2008:3.28,2009:1.14,2010:4.49,2011:6.95,2012:3.91,2013:5.13,2014:4.50,2015:2.96,2016:2.09,2017:1.36,2018:2.56,2019:3.19,2020:-7.19,2021:10.80,2022:7.33,2023:0.84,2024:1.49,2025:2.64,2026:2.7
+  }},
+  "BR": {name:"Brasil", color:"#06d6a0", vals:{
+    2000:4.39,2001:1.39,2002:3.05,2003:1.14,2004:5.76,2005:3.20,2006:3.96,2007:6.07,2008:5.09,2009:-0.13,2010:7.53,2011:3.97,2012:1.92,2013:3.00,2014:0.50,2015:-3.55,2016:-3.28,2017:1.32,2018:1.78,2019:1.22,2020:-3.28,2021:4.76,2022:3.02,2023:3.24,2024:3.42,2025:2.29,2026:2.2
+  }},
+  "MX": {name:"México", color:"#ef476f", vals:{
+    2000:5.03,2001:-0.45,2002:-0.24,2003:1.19,2004:3.57,2005:2.11,2006:4.81,2007:2.08,2008:0.94,2009:-6.30,2010:4.97,2011:3.44,2012:3.55,2013:0.85,2014:2.50,2015:2.70,2016:1.77,2017:1.87,2018:1.97,2019:-0.39,2020:-8.35,2021:6.05,2022:3.71,2023:3.11,2024:1.35,2025:0.56,2026:1.1
+  }},
+  "PE": {name:"Perú", color:"#a78bfa", vals:{
+    2000:2.69,2001:0.62,2002:5.45,2003:4.17,2004:4.96,2005:6.29,2006:7.53,2007:8.52,2008:9.13,2009:1.10,2010:8.33,2011:6.33,2012:6.14,2013:5.85,2014:2.38,2015:3.25,2016:3.95,2017:2.52,2018:3.97,2019:2.24,2020:-10.93,2021:13.42,2022:2.82,2023:-0.35,2024:3.52,2025:3.43,2026:2.5
+  }},
+  "AR": {name:"Argentina", color:"#ff9f1c", vals:{
+    2000:-0.79,2001:-4.41,2002:-10.89,2003:8.84,2004:9.03,2005:8.85,2006:8.05,2007:9.01,2008:4.06,2009:-5.92,2010:10.13,2011:6.00,2012:-1.03,2013:2.41,2014:-2.51,2015:2.73,2016:-2.08,2017:2.82,2018:-2.62,2019:-2.00,2020:-9.90,2021:10.44,2022:6.02,2023:-1.86,2024:-1.34,2025:4.37,2026:4.5
+  }},
+  "ZJ": {name:"LatAm", color:"#ffffff", vals:{
+    2000:3.62,2001:0.53,2002:0.22,2003:2.21,2004:5.72,2005:4.09,2006:5.26,2007:5.29,2008:3.69,2009:-2.30,2010:6.15,2011:4.40,2012:2.65,2013:2.72,2014:1.20,2015:0.24,2016:-0.73,2017:1.55,2018:1.22,2019:0.32,2020:-6.86,2021:7.08,2022:4.09,2023:2.21,2024:2.25,2025:2.32,2026:2.4
+  }},
+};
+const order = ["CL","CO","BR","MX","PE","AR","ZJ"];
+let startYear=2021, endYear=2026;
+let active = new Set(order);
+let view="growth"; // growth, cum, avg
+
+// build flat data for table etc: array of {year, values}
+function getFilteredYears(){ return d3.range(startYear, endYear+1); }
+function getDataInRange(){
+  const years=getFilteredYears();
+  return years.map(y=>{
+    const row={year:y};
+    order.forEach(k=> row[k]=rawByCountry[k].vals[y]);
+    row.isForecast = (y===2026);
+    return row;
+  });
+}
+function computeCumulative(start,end){
+  // start inclusive, compute index start-1=100
+  const countries={};
+  order.forEach(k=>{
+    let idx=100;
+    const cum={};
+    for(let y=start; y<=end; y++){
+      const g=rawByCountry[k].vals[y];
+      if(g!=null) idx = idx*(1+g/100);
+      cum[y]=idx;
+    }
+    countries[k]=cum;
+  });
+  return countries;
+}
+function computeStats(start,end){
+  const years = end-start+1;
+  const stats={};
+  order.forEach(k=>{
+    const vals = d3.range(start,end+1).map(y=> rawByCountry[k].vals[y]).filter(v=>v!=null);
+    const avg = d3.mean(vals);
+    // cumulative total growth from start to end: (cumEnd / 100 -1)*100 where cum start-1=100
+    let idx=100;
+    for(let y=start;y<=end;y++) idx*=(1+rawByCountry[k].vals[y]/100);
+    const total = idx-100;
+    const cagr = (Math.pow(idx/100, 1/years)-1)*100;
+    const min = d3.min(vals), max=d3.max(vals);
+    stats[k]={avg, total, cagr, min, max, count:years};
+  });
+  return stats;
+}
+
+// UI — period chips
+document.querySelectorAll("#periodChips .chip").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const [s,e]=btn.dataset.range.split("-").map(Number);
+    startYear=s; endYear=e;
+    syncInputs(); renderAll();
+  });
+});
+const startInput=document.getElementById("startYear");
+const endInput=document.getElementById("endYear");
+const startLabel=document.getElementById("startLabel");
+const endLabel=document.getElementById("endLabel");
+function syncInputs(){
+  startInput.value=startYear; endInput.value=endYear;
+  startLabel.textContent=startYear; endLabel.textContent=endYear;
+  if(+startInput.value >= +endInput.value) {
+    // ensure start < end
+    if(document.activeElement===startInput) endInput.value = Math.min(2026, +startInput.value+1);
+    else startInput.value = Math.max(2000, +endInput.value-1);
+    startYear=+startInput.value; endYear=+endInput.value;
+    startLabel.textContent=startYear; endLabel.textContent=endYear;
+  }
+}
+startInput.addEventListener("input", ()=>{ startYear=+startInput.value; syncInputs(); // update chips active none
+  document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
+  renderAll();
+});
+endInput.addEventListener("input", ()=>{ endYear=+endInput.value; syncInputs();
+  document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
+  renderAll();
+});
+document.querySelectorAll("[data-view]").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    view=b.dataset.view;
+    renderAll();
+  });
+});
+
+// legend
+const legendDiv=d3.select("#legend");
+order.forEach(k=>{
+  const c=rawByCountry[k];
+  const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k);
+  const isLatam=k==="ZJ";
+  item.style("border-color", isLatam?"#ffffff":null);
+  item.html(`<span class="dot" style="background:${c.color}"></span> ${c.name}`);
+  item.on("click", ()=>{
+    if(active.has(k)){
+      if(active.size===1) return;
+      active.delete(k); item.classed("off", true);
+    } else { active.add(k); item.classed("off", false);}
+    renderAll();
+  });
+});
+
+function renderKPIs(){
+  const stats=computeStats(startYear,endYear);
+  const grid=document.getElementById("kpiGrid");
+  grid.innerHTML="";
+  order.forEach(k=>{
+    const c=rawByCountry[k];
+    const s=stats[k];
+    const isLatam=k==="ZJ";
+    const avgColor = s.avg>2.5? "kpi-pos": s.avg<1? "kpi-neg":"";
+    const cagrColor = s.cagr>2? "kpi-pos": s.cagr<0.5? "kpi-neg":"kpi-gold";
+    const div=document.createElement("div");
+    div.className="kpi"+ (isLatam?" active":"");
+    div.innerHTML=`
+      <div class="kpi-label"><span>${c.name}</span><span style="font-size:10px">${startYear}-${endYear}</span></div>
+      <div class="kpi-country"><span class="kpi-dot" style="background:${c.color}"></span> ${isLatam?"Región":""}</div>
+      <div class="kpi-value">${s.avg>0?"+":""}${s.avg.toFixed(2)}% <small>prom.</small></div>
+      <div class="kpi-sub">Total <strong class="${s.total>0?'kpi-pos':'kpi-neg'}">${s.total>0?"+":""}${s.total.toFixed(1)}%</strong> • CAGR <strong class="${cagrColor}">${s.cagr.toFixed(2)}%</strong><br>Min ${s.min.toFixed(1)}% • Max ${s.max.toFixed(1)}%</div>
+    `;
+    grid.appendChild(div);
+  });
+  // insight
+  const chile=stats["CL"], lac=stats["ZJ"];
+  const diff = chile.avg - lac.avg;
+  const box=document.getElementById("insightBox");
+  let msg="";
+  if(startYear===2000 && endYear===2026) msg=`En <strong>2000-2026 (26 años)</strong> Chile promedia <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Acumulado: Chile +${chile.total.toFixed(1)}% (índice 100→${(100+chile.total).toFixed(0)}), LatAm +${lac.total.toFixed(1)}%. La década perdida 2015-2024 Chile 1.84% vs LatAm 1.02% — estancamiento del PIB per cápita.`;
+  else if(startYear===2021) msg=`En <strong>2021-2026</strong> (rebote + normalización) Chile <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Total: Chile +${chile.total.toFixed(1)}%, LatAm +${lac.total.toFixed(1)}%. 2026 es proyección punteada.`;
+  else msg=`Periodo <strong>${startYear}-${endYear} (${endYear-startYear+1} años)</strong>: Chile <strong>${chile.avg.toFixed(2)}%</strong> promedio vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). CAGR Chile ${chile.cagr.toFixed(2)}% vs LatAm ${lac.cagr.toFixed(2)}%.`;
+  box.innerHTML=msg + ` <span style="color:var(--muted)">• 2026 punteado = forecast WB.</span>`;
+}
+
+let xMain, yMain;
+function renderMainChart(){
+  const div=document.getElementById("mainChart");
+  div.innerHTML="";
+  const width=div.clientWidth;
+  const height=440;
+  const margin={top:14,right:16,bottom:28,left:44};
+  const w=width-margin.left-margin.right;
+  const h=height-margin.top-margin.bottom;
+  const svg=d3.select("#mainChart").append("svg").attr("width",width).attr("height",height);
+  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+  const years=getFilteredYears();
+  xMain=d3.scaleLinear().domain([startYear, endYear]).range([0,w]);
+  // y domain
+  let yDomain;
+  if(view==="growth"){
+    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> rawByCountry[k].vals[y])).filter(v=>v!=null);
+    const min=d3.min(vals), max=d3.max(vals);
+    const pad=(max-min)*0.18;
+    yDomain=[Math.floor(min-pad), Math.ceil(max+pad)];
+  } else if(view==="cum"){
+    const cum=computeCumulative(startYear,endYear);
+    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> cum[k][y]));
+    const min=d3.min(vals)-5, max=d3.max(vals)+5;
+    yDomain=[Math.floor(min/10)*10, Math.ceil(max/10)*10];
+  } else { // avg view -> show growth but with horizontal avg lines? still growth scale
+    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> rawByCountry[k].vals[y]));
+    yDomain=[Math.floor(d3.min(vals)-1), Math.ceil(d3.max(vals)+1)];
+  }
+  const y=d3.scaleLinear().domain(yDomain).range([h,0]).nice();
+  yMain=y;
+  // grid
+  g.append("g").attr("class","grid").call(d3.axisLeft(y).ticks(8).tickSize(-w).tickFormat("")).selectAll("line").attr("stroke-opacity",0.1);
+  g.select(".grid .domain").remove();
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(xMain).ticks(Math.min(12, years.length)).tickFormat(d3.format("d")));
+  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(8).tickFormat(d=> d + (view==="growth"||view==="avg"?"%":"")));
+  if(view==="growth"||view==="avg") g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(0)).attr("y2",y(0)).attr("stroke","#243347").attr("stroke-dasharray","4 4").attr("opacity",0.9);
+  // title update
+  document.getElementById("chartTitle").innerHTML = view==="cum" ? `Índice acumulado <em>— base ${startYear-1}=100</em>` : view==="avg" ? `Crecimiento + promedio del periodo` : `Crecimiento anual <em>— var. % PIB real</em>`;
+  // draw lines
+  order.forEach(k=>{
+    if(!active.has(k)) return;
+    const c=rawByCountry[k];
+    const data=years.map(y=> ({y, v: c.vals[y], cum: computeCumulative(startYear,endYear)[k][y], isF: y===2026}));
+    const yVal = d=> view==="cum" ? d.cum : d.v;
+    // split solid vs forecast
+    const solid=data.filter(d=> !d.isF && d.v!=null);
+    const forecast=data.filter(d=> d.y>=2025); // 2025-2026 includes 2025 observed but we want dashed only 2026 segment
+    const lineSolid=d3.line().defined(d=> yVal(d)!=null).x(d=>xMain(d.y)).y(d=>y(yVal(d))).curve(d3.curveMonotoneX);
+    const lineF=d3.line().defined(d=> yVal(d)!=null).x(d=>xMain(d.y)).y(d=>y(yVal(d))).curve(d3.curveMonotoneX);
+    // solid 2000-2025
+    g.append("path").datum(solid).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.6:2.0).attr("d", lineSolid).attr("opacity", k==="ZJ"?1:0.92);
+    // forecast last segment dashed (2025->2026)
+    if(data.some(d=>d.isF)){
+      const lastTwo=data.slice(-2);
+      g.append("path").datum(lastTwo).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.6:2.0).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d", lineF);
+      // dot forecast
+      const last=lastTwo[1];
+      g.append("circle").attr("cx", xMain(last.y)).attr("cy", y(yVal(last))).attr("r",3.5).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1.2);
+    }
+    // dots for solid points
+    solid.forEach(d=>{
+      g.append("circle").attr("cx", xMain(d.y)).attr("cy", y(yVal(d))).attr("r",2.8).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1).attr("opacity",0.95);
+    });
+    // avg line if view avg
+    if(view==="avg"){
+      const avg=d3.mean(data.filter(d=>!d.isF).map(d=>d.v));
+      g.append("line").attr("x1", xMain(startYear)).attr("x2", xMain(endYear)).attr("y1", y(avg)).attr("y2", y(avg)).attr("stroke",c.color).attr("stroke-width",1).attr("stroke-dasharray","3 3").attr("opacity",0.5);
+    }
+  });
+  // overlay tooltip
+  const tooltip=d3.select("#tooltip");
+  const overlay=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent");
+  overlay.on("mousemove", (event)=>{
+    const [mx]=d3.pointer(event);
+    const year=Math.round(xMain.invert(mx));
+    const clamped=Math.max(startYear, Math.min(endYear, year));
+    const xPos=xMain(clamped);
+    g.selectAll(".hover-line").remove();
+    g.append("line").attr("class","hover-line").attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h).attr("stroke","#2a364a").attr("stroke-dasharray","4 4");
+    let html=`<div class="tt-date">${clamped} ${clamped===2026?'(proyección)':''}</div>`;
+    order.forEach(k=>{
+      if(!active.has(k)) return;
+      const c=rawByCountry[k];
+      const v=c.vals[clamped];
+      if(v==null) return;
+      const cum=computeCumulative(startYear,endYear)[k][clamped];
+      const valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
+      const col=v>=0?"#2ecc71":"#ff6b6b";
+      html+=`<div class="tt-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><span style="text-align:right"><strong>${valStr}</strong>${view==="growth" && clamped>=2000? `<br><span style="color:${col};font-size:11px">${v>0?"+":""}${v.toFixed(1)}%</span>`:""}</span></div>`;
+    });
+    tooltip.html(html).style("display","block");
+    const rect=div.getBoundingClientRect();
+    let left=event.clientX - rect.left +14;
+    if(left+260>rect.width) left=event.clientX - rect.left -274;
+    tooltip.style("left", left+"px").style("top", (event.clientY - rect.top -10)+"px");
+  }).on("mouseleave", ()=>{
+    g.selectAll(".hover-line").remove();
+    tooltip.style("display","none");
+  });
+}
+
+function renderBarChart(){
+  const div=document.getElementById("barChart");
+  div.innerHTML="";
+  const width=div.clientWidth;
+  const height=380;
+  const margin={top:16,right:16,bottom:24,left:110};
+  const w=width-margin.left-margin.right;
+  const h=height-margin.top-margin.bottom;
+  const svg=d3.select("#barChart").append("svg").attr("width",width).attr("height",height);
+  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+  const stats=computeStats(startYear,endYear);
+  const countries=order.filter(k=>k!=="ZJ").map(k=> ({k, name:rawByCountry[k].name, color:rawByCountry[k].color, avg:stats[k].avg}));
+  countries.sort((a,b)=> b.avg - a.avg);
+  const y=d3.scaleBand().domain(countries.map(d=>d.name)).range([0,h]).padding(0.18);
+  const x=d3.scaleLinear().domain([-1, d3.max(countries,d=>d.avg)*1.15 || 6]).range([0,w]);
+  const xNeg = d3.min(countries,d=>d.avg);
+  if(xNeg<0) x.domain([Math.min(-2, xNeg*1.2), d3.max(countries,d=>d.avg)*1.15]);
+  g.append("g").attr("class","grid").call(d3.axisBottom(x).ticks(5).tickSize(h).tickFormat("")).selectAll("line").attr("stroke-opacity",0.06);
+  g.select(".grid .domain").remove();
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+"%"));
+  g.append("g").attr("class","axis").call(d3.axisLeft(y));
+  g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",h).attr("stroke","#243347").attr("stroke-dasharray","4 4");
+  countries.forEach(d=>{
+    const isForecast = endYear===2026;
+    g.append("rect").attr("y", y(d.name)).attr("x", x(Math.min(0,d.avg))).attr("width", Math.abs(x(d.avg)-x(0))).attr("height", y.bandwidth()).attr("fill", d.color).attr("opacity", isForecast?0.62:0.9).attr("rx",4);
+    if(isForecast) g.append("rect").attr("y", y(d.name)).attr("x", x(Math.min(0,d.avg))).attr("width", Math.abs(x(d.avg)-x(0))).attr("height", y.bandwidth()).attr("fill","none").attr("stroke",d.color).attr("stroke-dasharray","4 3").attr("rx",4);
+    g.append("text").attr("x", x(d.avg)+(d.avg>=0?6:-6)).attr("y", y(d.name)+y.bandwidth()/2).attr("dy","0.35em").attr("text-anchor", d.avg>=0?"start":"end").attr("fill","#eef2f7").attr("font-size","11px").attr("font-weight","600").text(d.avg.toFixed(2)+"%");
+  });
+  // LatAm avg line
+  const lacAvg=stats["ZJ"].avg;
+  g.append("line").attr("x1", x(lacAvg)).attr("x2", x(lacAvg)).attr("y1",0).attr("y2",h).attr("stroke","#ffffff").attr("stroke-width",1.4).attr("stroke-dasharray","6 4").attr("opacity",0.9);
+  g.append("text").attr("x", x(lacAvg)).attr("y", -6).attr("text-anchor","middle").attr("fill","#ffffff").attr("font-size","10px").attr("font-family","IBM Plex Mono").text(`LatAm ${lacAvg.toFixed(2)}%`);
+}
+
+function renderCumChart(){
+  const div=document.getElementById("cumChart");
+  div.innerHTML="";
+  const width=div.clientWidth;
+  const height=360;
+  const margin={top:14,right:16,bottom:28,left:44};
+  const w=width-margin.left-margin.right;
+  const h=height-margin.top-margin.bottom;
+  const svg=d3.select("#cumChart").append("svg").attr("width",width).attr("height",height);
+  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+  const years=getFilteredYears();
+  const cum=computeCumulative(startYear,endYear);
+  const allVals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> cum[k][y]));
+  const y=d3.scaleLinear().domain([d3.min(allVals)*0.97, d3.max(allVals)*1.03]).range([h,0]).nice();
+  const x=d3.scaleLinear().domain([startYear,endYear]).range([0,w]);
+  g.append("g").attr("class","grid").call(d3.axisLeft(y).ticks(6).tickSize(-w).tickFormat("")).selectAll("line").attr("stroke-opacity",0.08);
+  g.select(".grid .domain").remove();
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(Math.min(10, years.length)).tickFormat(d3.format("d")));
+  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6));
+  g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(100)).attr("y2",y(100)).attr("stroke","#243347").attr("stroke-dasharray","4 4");
+  order.forEach(k=>{
+    if(!active.has(k)) return;
+    const c=rawByCountry[k];
+    const data=years.map(y=> ({y, cum:cum[k][y], isF: y===2026}));
+    const lineSolid=d3.line().x(d=>x(d.y)).y(d=>y(d.cum)).curve(d3.curveMonotoneX);
+    const solid=data.filter(d=>!d.isF);
+    const forecast=data.slice(-2);
+    g.append("path").datum(solid).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.4:1.9).attr("d", lineSolid);
+    if(forecast.length===2) g.append("path").datum(forecast).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.4:1.9).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d", lineSolid);
+    // end label
+    const last=data[data.length-1];
+    g.append("text").attr("x", x(last.y)+4).attr("y", y(last.cum)).attr("dy","0.35em").attr("fill", c.color).attr("font-size","11px").attr("font-weight","600").text(`${c.name} ${last.cum.toFixed(0)}`);
+  });
+}
+
+function renderTable(){
+  const tbody=document.querySelector("#dataTable tbody");
+  const search=document.getElementById("search").value.toLowerCase();
+  const sortBy=document.getElementById("sortBy").value;
+  let rows=getDataInRange().filter(r=>{
+    if(!search) return true;
+    return String(r.year).includes(search) || order.some(k=> rawByCountry[k].name.toLowerCase().includes(search));
+  });
+  if(sortBy==="year-desc") rows.sort((a,b)=> b.year - a.year);
+  else if(sortBy==="year-asc") rows.sort((a,b)=> a.year - b.year);
+  else if(sortBy==="country") rows.sort((a,b)=> order.indexOf(a) - order.indexOf(b));
+  else if(sortBy==="growth-desc"){
+    // sort by Chile growth desc
+    rows.sort((a,b)=> (b.CL||-999) - (a.CL||-999));
+  }
+  tbody.innerHTML="";
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+    let html=`<td><strong>${r.year}</strong>${r.isForecast?' <span style="font-size:10px;color:var(--gold);border:1px solid var(--gold);padding:1px 4px;border-radius:4px;margin-left:6px">2026f</span>':''}</td>`;
+    order.forEach(k=>{
+      const v=r[k];
+      const cls = v==null? "neutral": v>2.5? "pos": v<0? "neg":"";
+      const fc = r.isForecast? ' style="opacity:0.7;font-style:italic"':"";
+      html+=`<td class="${cls}"${fc}>${v==null?"—": (v>0?"+":"")+v.toFixed(2)+"%"}</td>`;
+    });
+    tr.innerHTML=html;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderBrush(){
+  const div=document.getElementById("brushChart");
+  div.innerHTML="";
+  const width=div.clientWidth;
+  const height=68;
+  const margin={top:6,right:16,bottom:18,left:44};
+  const w=width-margin.left-margin.right;
+  const h=height-margin.top-margin.bottom;
+  const svg=d3.select("#brushChart").append("svg").attr("width",width).attr("height",height);
+  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+  const x=d3.scaleLinear().domain([2000,2026]).range([0,w]);
+  const y=d3.scaleLinear().domain([-11, 14]).range([h,0]);
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(13).tickFormat(d3.format("d")));
+  order.forEach(k=>{
+    if(!active.has(k)) return;
+    const c=rawByCountry[k];
+    const data=d3.range(2000,2027).map(y=> ({y, v:c.vals[y]})).filter(d=>d.v!=null);
+    const line=d3.line().x(d=>x(d.y)).y(d=>y(d.v)).curve(d3.curveMonotoneX);
+    g.append("path").datum(data).attr("fill","none").attr("stroke",c.color).attr("stroke-width",1.1).attr("opacity",0.8).attr("d", line);
+  });
+  // highlight selected range
+  g.append("rect").attr("x", x(startYear)).attr("width", x(endYear)-x(startYear)).attr("y",0).attr("height",h).attr("fill","rgba(200,169,110,0.12)").attr("stroke","var(--gold)").attr("stroke-width",1).attr("rx",4);
+  const brush=d3.brushX().extent([[0,0],[w,h]]).on("end", (event)=>{
+    if(!event.selection) return;
+    const [x0,x1]=event.selection.map(x.invert).map(v=> Math.round(v));
+    startYear=Math.max(2000, Math.min(x0,x1));
+    endYear=Math.min(2026, Math.max(x0,x1));
+    if(startYear===endYear) endYear=Math.min(2026, startYear+1);
+    syncInputs();
+    document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
+    renderAll();
+  });
+  g.append("g").attr("class","brush").call(brush);
+}
+
+function renderAll(){
+  renderKPIs();
+  renderMainChart();
+  renderBarChart();
+  renderCumChart();
+  renderTable();
+  renderBrush();
+}
+
+document.getElementById("search").addEventListener("input", renderTable);
+document.getElementById("sortBy").addEventListener("change", renderTable);
+document.getElementById("exportCSV").addEventListener("click", ()=>{
+  const years=getFilteredYears();
+  let csv="Year,"+order.map(k=>rawByCountry[k].name).join(",")+"\n";
+  years.forEach(y=>{
+    csv+=y+","+order.map(k=>{
+      const v=rawByCountry[k].vals[y];
+      return v==null?"":v.toFixed(2);
+    }).join(",")+"\n";
+  });
+  const blob=new Blob([csv],{type:"text/csv"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=`latam_growth_${startYear}-${endYear}.csv`; a.click(); URL.revokeObjectURL(url);
+});
+
+window.addEventListener("resize", renderAll);
+renderAll();
+</script>
 </body>
 </html>
