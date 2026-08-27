@@ -311,6 +311,7 @@ function highlightLine(k){
   d3.selectAll("#mainChart .dot").classed("dot-dim", false).classed("dot-focus", false);
   if(!k) return;
   d3.selectAll("#mainChart .line-base").classed("line-dim", function(){return this.dataset.k!==k;});
+  d3.selectAll("#mainChart .line-base.line-dim").style("opacity",0.32);
   d3.selectAll(`#mainChart .line-${k}`).classed("line-dim",false).classed("line-focus",true).raise();
   d3.selectAll("#mainChart .dot").classed("dot-dim", function(){return this.dataset.k!==k;});
   d3.selectAll(`#mainChart .dot-${k}`).classed("dot-dim",false).classed("dot-focus",true).raise();
@@ -485,8 +486,9 @@ function renderMainChart(){
     });
     if(!best) return;
     highlightLine(best);
-    const keys = best==="ZJ" ? ["ZJ"] : (active.has("ZJ") ? [best,"ZJ"] : [best]);
-    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''}</div>`;
+    const keys = order.filter(k=> active.has(k));
+    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''} · ${view==="cum"?"índice": metric==="nominal"?"USD":"var. %"}</div>`;
+    // highlight best faintly in list
     keys.forEach(k=>{
       const c=rawByCountry[k];
       const v=dsTT[k].vals[clamped]; if(v==null) return;
@@ -496,18 +498,19 @@ function renderMainChart(){
       if(isNom) valStr = "$"+v.toFixed(0)+"B";
       else valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
       const col=v>=0? "var(--pos)":"var(--neg)";
-      html+=`<div class="tt-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${col}">${valStr}</strong></div>`;
+      const isBest = k===best;
+      html+=`<div class="tt-row" style="${isBest? 'background:var(--accent-bg);border-radius:4px;padding:2px 4px;margin:0 -4px;':''}"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${isBest?c.color:col}">${valStr}</strong></div>`;
     });
     if(keys.length===1) html+=`<div style="font-size:10px;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Hover leyenda para resaltar · Click para aislar · Shift+click toggle</div>`;
     tt.html(html).style("display","block");
-    const ttNode=tt.node(); const ttW=160, ttH=ttNode.offsetHeight||70;
-    let left = xPos < w*0.62 ? xPos + 14 : xPos - ttW - 14;
-    left = Math.max(8, Math.min(w - ttW - 8, left));
-    let top = y(dsTT[best].vals[clamped] ?? 0);
-    if(view==="cum") top = y(computeCumulative(startYear,endYear)[best][clamped]);
-    top = top - ttH/2;
-    top = Math.max(8, Math.min(h - ttH - 8, top));
+    const ttNode=tt.node(); const ttW=200, ttH=ttNode.offsetHeight||120;
+    // Fixed side position to allow comparison, not covering point
+    let left = w - ttW - 10;
+    let top = 10;
+    // On mobile, keep near top
     tt.style("left", left+"px").style("top", top+"px");
+    // still highlight best with subtle background in list
+
   }).on("mouseleave", ()=>{
     hoverLine.style("display","none"); tt.style("display","none");
     highlightLine(isolatedKey||null);

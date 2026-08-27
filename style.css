@@ -148,7 +148,7 @@ table.data tbody tr:hover td{background:#131a24}
 /* highlight — professional */
 #mainChart{position:relative}
 #mainChart .line-base{transition:opacity .12s, stroke-width .12s}
-.line-dim{opacity:.12 !important}
+.line-dim{opacity:.32 !important}
 .line-focus{opacity:1 !important; stroke-width:3px !important}
 .dot-dim{opacity:.15 !important}
 .dot-focus{opacity:1 !important}
@@ -156,7 +156,7 @@ table.data tbody tr:hover td{background:#131a24}
 .legend-item.is-hover{border-color:var(--accent-2); background:var(--accent-bg)}
 .legend-item.is-isolated{border-color:var(--ink); background:var(--ink); color:var(--bg)}
 .legend-item.is-isolated .dot{filter:brightness(0.7)}
-.tooltip-compact{position:absolute; min-width:148px; max-width:168px; width:160px; padding:8px 9px; border-radius:8px; font-size:11.5px; pointer-events:none; z-index:20; background:#0E141E; border:1px solid #253A54; box-shadow:0 8px 24px rgba(0,0,0,.45)}
+.tooltip-compact{position:absolute; min-width:180px; max-width:210px; width:200px; padding:8px 9px; border-radius:8px; font-size:11.5px; pointer-events:none; z-index:20; background:#0E141E; border:1px solid #253A54; box-shadow:0 8px 24px rgba(0,0,0,.45)}
 .tooltip-compact .tt-date{font:400 10px 'IBM Plex Mono',monospace; letter-spacing:.06em; text-transform:uppercase; color:var(--accent-2); border-bottom:1px solid var(--line); padding-bottom:5px; margin-bottom:5px}
 .tooltip-compact .tt-row{display:flex; justify-content:space-between; gap:8px; padding:2px 0}
 .tooltip-compact .tt-row + .tt-row{border-top:1px dashed #1e2936}
