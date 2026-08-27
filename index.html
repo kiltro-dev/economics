@@ -499,32 +499,33 @@ function renderMainChart(){
   });
   // overlay tooltip
     // compact tooltip inside chart (no cover) + highlight
+  let pinnedYear=null, pinnedKey=null;
   let tt = d3.select("#mainChart").selectAll(".tooltip-compact").data([null]);
   tt = tt.enter().append("div").attr("class","tooltip-compact").attr("id","ttCompact").merge(tt);
   tt.style("display","none");
   const hoverLine = g.append("line").attr("class","hover-line").attr("stroke","#2a364a").attr("stroke-dasharray","4 4").style("display","none");
   const overlay=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent").style("cursor","crosshair");
-  overlay.on("mousemove", (event)=>{
-    const [mx,my]=d3.pointer(event);
-    const year=Math.round(xMain.invert(mx));
-    const clamped=Math.max(startYear, Math.min(endYear, year));
+  function showHover(clamped, my, isPinned){
     const xPos=xMain(clamped);
     hoverLine.style("display",null).attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h);
     const dsTT = (typeof getDataset==='function'? getDataset(): rawByCountry);
     let best=null, bestDist=Infinity;
-    order.forEach(k=>{
-      if(!active.has(k)) return;
-      const v=dsTT[k].vals[clamped]; if(v==null) return;
-      const yv = view==="cum" ? computeCumulative(startYear,endYear)[k][clamped] : v;
-      const yp = y(yv);
-      const dist=Math.abs(yp - my);
-      if(dist<bestDist){bestDist=dist; best=k;}
-    });
+    if(my!=null){
+      order.forEach(k=>{
+        if(!active.has(k)) return;
+        const v=dsTT[k].vals[clamped]; if(v==null) return;
+        const yv = view==="cum" ? computeCumulative(startYear,endYear)[k][clamped] : v;
+        const yp = y(yv);
+        const dist=Math.abs(yp - my);
+        if(dist<bestDist){bestDist=dist; best=k;}
+      });
+    } else {
+      best = [...active][0];
+    }
     if(!best) return;
-    highlightLine(best);
+    if(!isPinned) highlightLine(best);
     const keys = order.filter(k=> active.has(k));
-    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''} · ${view==="cum"?"índice": metric==="nominal"?"USD":"var. %"}</div>`;
-    // highlight best faintly in list
+    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''} · ${view==="cum"?"índice": metric==="nominal"?"USD":"var. %"}${isPinned?' <span style="color:var(--accent-2);font-size:10px">· fijado</span>':''}</div>`;
     keys.forEach(k=>{
       const c=rawByCountry[k];
       const v=dsTT[k].vals[clamped]; if(v==null) return;
@@ -534,22 +535,48 @@ function renderMainChart(){
       if(isNom) valStr = "$"+v.toFixed(0)+"B";
       else valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
       const col=v>=0? "var(--pos)":"var(--neg)";
-      const isBest = k===best;
-      html+=`<div class="tt-row" style="${isBest? 'background:var(--accent-bg);border-radius:4px;padding:2px 4px;margin:0 -4px;':''}"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${isBest?c.color:col}">${valStr}</strong></div>`;
+      html+=`<div class="tt-row" style="${best===k? 'background:var(--accent-bg);border-radius:4px;padding:2px 4px;margin:0 -4px;':''}"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${best===k?c.color:col}">${valStr}</strong></div>`;
     });
-    if(keys.length===1) html+=`<div style="font-size:10px;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Hover leyenda para resaltar · Click para aislar · Shift+click toggle</div>`;
+    if(!isPinned) html+=`<div style="font-size:10px;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Click para fijar · Esc para soltar</div>`;
+    else html+=`<div style="font-size:10px;color:var(--accent-2);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Fijado en ${clamped} · Click en otro año para mover · Esc para soltar</div>`;
     tt.html(html).style("display","block");
     const ttNode=tt.node(); const ttW=200, ttH=ttNode.offsetHeight||120;
-    // Fixed side position to allow comparison, not covering point
     let left = w - ttW - 10;
     let top = 10;
-    // On mobile, keep near top
     tt.style("left", left+"px").style("top", top+"px");
-    // still highlight best with subtle background in list
-
+    if(isPinned){
+      pinnedYear=clamped; pinnedKey=best;
+    }
+  }
+  overlay.on("mousemove", (event)=>{
+    if(pinnedYear!==null) return;
+    const [mx,my]=d3.pointer(event);
+    const year=Math.round(xMain.invert(mx));
+    const clamped=Math.max(startYear, Math.min(endYear, year));
+    showHover(clamped, my, false);
   }).on("mouseleave", ()=>{
+    if(pinnedYear!==null) return;
     hoverLine.style("display","none"); tt.style("display","none");
     highlightLine(isolatedKey||null);
+  }).on("click", (event)=>{
+    const [mx,my]=d3.pointer(event);
+    const year=Math.round(xMain.invert(mx));
+    const clamped=Math.max(startYear, Math.min(endYear, year));
+    if(pinnedYear===clamped){
+      pinnedYear=null; pinnedKey=null;
+      tt.style("display","none"); hoverLine.style("display","none");
+      highlightLine(isolatedKey||null);
+    } else {
+      showHover(clamped, my, true);
+      highlightLine(pinnedKey);
+    }
+  });
+  d3.select(document).on("keydown.pinned", (event)=>{
+    if(event.key==="Escape" && pinnedYear!==null){
+      pinnedYear=null; pinnedKey=null;
+      tt.style("display","none"); hoverLine.style("display","none");
+      highlightLine(isolatedKey||null);
+    }
   });
 }
 
