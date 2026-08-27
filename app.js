@@ -54,20 +54,22 @@ const raw = [
   {p:"May.2026", clp:897.9, cop:3717.98, mxn:17.3209, brl:4.9848, pen:3.4312380952381},
   {p:"Jun.2026", clp:906.52, cop:3492.45, mxn:17.4017, brl:5.12984761904762, pen:3.40019047619048},
   {p:"Jul.2026", clp:931.52, cop:3251.22, mxn:17.47, brl:5.1146, pen:3.40166666666667},
+  {p:"Ago.2026*", clp:916.6578947368421, cop:3275.0, mxn:17.35, brl:5.08, pen:3.405, provisional:true},
 ];
 
 const monthMap = {Ene:0, Feb:1, Mar:2, Abr:3, May:4, Jun:5, Jul:6, Ago:7, Sep:8, Oct:9, Nov:10, Dic:11};
 function parseDate(s){
-  const [m, y] = s.split(".");
+  const clean = s.replace("*","").trim();
+  const [m, y] = clean.split(".");
   return new Date(+y, monthMap[m], 1);
 }
 raw.forEach(d=>{
   d.date = parseDate(d.p);
-  d.clpIdx = d.clp / raw[0].clp * 100;
-  d.copIdx = d.cop / raw[0].cop * 100;
-  d.mxnIdx = d.mxn / raw[0].mxn * 100;
-  d.brlIdx = d.brl / raw[0].brl * 100;
-  d.penIdx = d.pen / raw[0].pen * 100;
+  d.clpIdx = d.clp != null ? d.clp / raw[0].clp * 100 : null;
+  d.copIdx = d.cop != null ? d.cop / raw[0].cop * 100 : null;
+  d.mxnIdx = d.mxn != null ? d.mxn / raw[0].mxn * 100 : null;
+  d.brlIdx = d.brl != null ? d.brl / raw[0].brl * 100 : null;
+  d.penIdx = d.pen != null ? d.pen / raw[0].pen * 100 : null;
 });
 
 const series = [
@@ -124,14 +126,13 @@ function render(){
 }
 function getYDomain(){
   if(mode==="indexed"){
-    const vals = raw.flatMap(d=> series.filter(s=>active.has(s.key)).map(s=> d[s.key]));
+    const vals = raw.flatMap(d=> series.filter(s=>active.has(s.key)).map(s=> d[s.key]).filter(v=>v!=null));
     const min = d3.min(vals), max = d3.max(vals);
     const pad = (max-min)*0.15;
     return [Math.floor(min-pad), Math.ceil(max+pad)];
   } else if(mode==="log"){
-    return [1, 6000]; // will use log scale for absolute
+    return [1, 6000];
   } else {
-    // absolute: use indexed as fallback but with separate? For absolute we show log-like with multiple scales not possible, so we show indexed but label as absolute? Better use log.
     return [1, 6000];
   }
 }
@@ -170,16 +171,27 @@ function drawMain(){
 
   series.forEach(s=>{
     if(!active.has(s.key)) return;
-    const key = mode==="indexed"? s.key : s.absKey; // for log use abs
-    const actualKey = mode==="indexed"? s.key : s.absKey;
-    // need to choose correct scale: if mode indexed use idx, else abs
     const yVal = d=> mode==="indexed"? d[s.key] : d[s.absKey];
-    const line = d3.line().x(d=>xScale(d.date)).y(d=>yScale(yVal(d))).curve(d3.curveMonotoneX);
-    linesG.append("path").datum(raw).attr("class","line").attr("d", line).attr("stroke", s.color).attr("stroke-width", s.width).attr("opacity", s.key==="clpIdx"?1:0.92);
-    // area for CLP
+    const solidData = raw.filter(d=> !d.provisional && yVal(d)!=null);
+    const provData = raw.filter(d=> yVal(d)!=null).slice(-2); // last solid + provisional
+    const lineSolid = d3.line().defined(d=> yVal(d)!=null).x(d=>xScale(d.date)).y(d=>yScale(yVal(d))).curve(d3.curveMonotoneX);
+    // solid
+    linesG.append("path").datum(solidData).attr("class","line").attr("d", lineSolid).attr("stroke", s.color).attr("stroke-width", s.width).attr("opacity", s.key==="clpIdx"?1:0.92);
+    // provisional dashed (last segment)
+    if(provData.length===2 && provData[1].provisional){
+      const lineProv = d3.line().defined(d=> yVal(d)!=null).x(d=>xScale(d.date)).y(d=>yScale(yVal(d))).curve(d3.curveMonotoneX);
+      linesG.append("path").datum(provData).attr("class","line").attr("d", lineProv).attr("stroke", s.color).attr("stroke-width", s.width).attr("opacity",0.9).attr("stroke-dasharray","6 4");
+      // dot provisional
+      const last = provData[1];
+      linesG.append("circle").attr("cx", xScale(last.date)).attr("cy", yScale(yVal(last))).attr("r",4).attr("fill", s.color).attr("stroke","#0f1419").attr("stroke-width",1.5).attr("opacity",0.9);
+      if(s.key==="clpIdx" && mode==="indexed"){
+        g.append("text").attr("x", xScale(last.date)+6).attr("y", yScale(yVal(last))-10).attr("fill", s.color).attr("font-size","11px").attr("font-weight","600").text("Ago* 916.66 provisional");
+      }
+    }
+    // area for CLP (only solid)
     if(s.key==="clpIdx" && mode==="indexed"){
-      const area = d3.area().x(d=>xScale(d.date)).y0(h).y1(d=>yScale(d[s.key])).curve(d3.curveMonotoneX);
-      linesG.append("path").datum(raw).attr("class","area").attr("d", area).attr("fill", s.color);
+      const area = d3.area().defined(d=> d[s.key]!=null).x(d=>xScale(d.date)).y0(h).y1(d=>yScale(d[s.key])).curve(d3.curveMonotoneX);
+      linesG.append("path").datum(solidData).attr("class","area").attr("d", area).attr("fill", s.color);
     }
   });
 
@@ -244,7 +256,7 @@ function drawBrush(){
   series.forEach(s=>{
     if(!active.has(s.key)) return;
     const yVal = d=> mode==="indexed"? d[s.key] : d[s.absKey];
-    const line = d3.line().x(d=>x2(d.date)).y(d=>y2(yVal(d))).curve(d3.curveMonotoneX);
+    const line = d3.line().defined(d=> yVal(d)!=null).x(d=>x2(d.date)).y(d=>y2(yVal(d))).curve(d3.curveMonotoneX);
     g.append("path").datum(raw).attr("fill","none").attr("stroke",s.color).attr("stroke-width",1.2).attr("opacity",0.9).attr("d", line);
   });
   const brush = d3.brushX().extent([[0,0],[w,h]]).on("brush end", brushed);
