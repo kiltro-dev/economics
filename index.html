@@ -275,7 +275,7 @@ function renderMain(){
 function renderBar(){
   const div=document.getElementById("barChart");
   div.innerHTML="";
-  const W=div.clientWidth, H=360, m={top:12,right:14,bottom:24,left:110}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const W=div.clientWidth, H=360, m={top:20,right:14,bottom:24,left:110}, w=W-m.left-m.right, h=H-m.top-m.bottom;
   const svg=d3.select("#barChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).style("width","100%").style("height","auto");
   const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
   const st=statsFor(startYear,endYear);
@@ -283,6 +283,7 @@ function renderBar(){
   if(!arr.length) return;
   const y=d3.scaleBand().domain(arr.map(d=>d.name)).range([0,h]).padding(0.18);
   const x=d3.scaleLinear().domain([Math.min(-1,d3.min(arr,d=>d.avg)*1.1), Math.max(2, d3.max(arr,d=>d.avg)*1.1)]).range([0,w]);
+  g.append("g").attr("class","axis axis--top").call(d3.axisTop(x).ticks(4).tickFormat(d=>d+"%"));
   g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(4).tickFormat(d=>d+"%"));
   g.append("g").attr("class","axis").call(d3.axisLeft(y));
   g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",h).attr("stroke","#23344B").attr("stroke-dasharray","4 4");
