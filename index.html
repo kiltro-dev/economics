@@ -17,12 +17,8 @@
         <h1>LatAm Growth <em>Monitor</em> <span>2000 — 2026</span></h1>
         <p class="subtitle">PIB real, var. anual %. 2000–2025 observado; 2026 proyección. Punteado = proyección.</p>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-        <a href="fx.html" class="badge" style="text-decoration:none">FX Dashboard →</a>
-        <button id="exportCSV" class="btn btn-primary">↓ Exportar CSV 2000-2026</button>
-      </div>
+      <button id="exportCSV" class="btn btn-primary">↓ Exportar CSV</button>
     </div>
-
   </div>
 </header>
 
@@ -35,7 +31,6 @@
         <span class="range-sep">—</span>
         <label class="filter-label" for="endYear">Hasta</label>
         <select id="endYear" class="year-select"></select>
-        <span class="scrubber-value" id="scrubberLabel">2021 — 2026 · 6A</span>
       </div>
       <div class="period-chips" id="periodChips">
         <button class="chip" data-range="2000-2026">2000-2026</button>
@@ -44,27 +39,19 @@
         <button class="chip active" data-range="2021-2026">5A · 2021-26</button>
         <button class="chip" data-range="2015-2024">Década perdida</button>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <div class="segmented" id="metricToggle">
-          <button class="seg active" data-metric="gdp">PIB real</button>
-          <button class="seg" data-metric="pcap">Per cápita</button>
-          <button class="seg" data-metric="nominal">Nominal USD</button>
-        </div>
-        <div class="toggles">
-          <button class="btn btn-sm active" data-view="growth">Var. anual %</button>
-          <button class="btn btn-sm" data-view="cum">Acumulado</button>
-          <button class="btn btn-sm" data-view="avg">Promedio</button>
-        </div>
+      <div class="toggles">
+        <button class="btn btn-sm active" data-view="growth">Var. anual %</button>
+        <button class="btn btn-sm" data-view="cum">Acumulado</button>
       </div>
     </div>
     <div class="card-header">
       <div>
         <h2 id="chartTitle">Crecimiento anual <em>— var. % PIB real</em></h2>
-        <p class="card-desc" id="chartDesc">Sólida = observado (2000–2025); punteada = proyección (2026).</p>
+        <p class="card-desc">Sólida = observado (2000–2025); punteada = 2026 proyección. Hover resalta país, click en leyenda para filtrar.</p>
       </div>
       <div class="controls">
         <div class="legend" id="legend"></div>
-        <div id="selectionInfo" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;min-height:14px"></div>
+        <div id="selectionInfo" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;min-height:14px">Todos activos · Click para filtrar</div>
       </div>
     </div>
     <div id="mainChart" class="chart"></div>
@@ -75,13 +62,13 @@
 
   <section class="grid-2">
     <div class="card">
-      <h3 id="barTitle">Ranking — promedio en periodo seleccionado</h3>
-      <p class="card-desc">Promedio anual en el rango elegido. Barras sólidas = observado, rayadas = incluye proyección 2026.</p>
-      <div id="barChart" style="height:380px"></div>
+      <h3>Ranking — promedio del periodo</h3>
+      <p class="card-desc">Promedio anual del periodo seleccionado.</p>
+      <div id="barChart" style="height:360px"></div>
     </div>
     <div class="card">
-      <h3>Acumulado desde inicio del periodo</h3>
-      <p class="card-desc">Índice inicio=100. Para 2000-2026: Chile 100→~210 (+110% en 26 años), LatAm 100→~156.</p>
+      <h3>Acumulado desde inicio</h3>
+      <p class="card-desc">Índice inicio = 100.</p>
       <div id="cumChart" class="chart chart-sm"></div>
     </div>
   </section>
@@ -89,16 +76,14 @@
   <section class="card">
     <div class="card-header">
       <div>
-        <h2>Serie anual completa — tabla <em>filtrada por periodo</em></h2>
-        <p class="card-desc">Var. anual %. 2000-2025 WDI, 2026f WB GEP. Celdas verde/rojo según signo. Click en cabecera para ordenar. Busca país o año.</p>
+        <h2>Serie anual</h2>
+        <p class="card-desc">Var. anual %. 2000–2025 WDI, 2026f WB GEP. Click cabecera para ordenar.</p>
       </div>
       <div class="table-controls">
-        <input id="search" type="search" placeholder="Filtrar: Chile, 2008, 2021..." />
+        <input id="search" type="search" placeholder="Filtrar año..." />
         <select id="sortBy">
-          <option value="year-desc">Año ↓ reciente primero</option>
-          <option value="year-asc">Año ↑ antiguo primero</option>
-          <option value="country">País A-Z</option>
-          <option value="growth-desc">Mayor crecimiento primero</option>
+          <option value="year-desc">Año ↓</option>
+          <option value="year-asc">Año ↑</option>
         </select>
       </div>
     </div>
@@ -120,642 +105,228 @@
       </table>
     </div>
   </section>
-
 </main>
 
 <footer class="footer">
   <div class="container">
-    <p>© 2026 LatAm Growth Monitor · WB WDI 2026-07-13 (NY.GDP.MKTP.KD.ZG) · WB GEP jun-2025 · BCCh · CEPAL · IMF WEO · D3.js</p>
+    <p>© 2026 LatAm Growth Monitor · WB WDI 2026-07-13 · WB GEP jun-2025</p>
     <details class="sources-details">
       <summary>Fuentes</summary>
-      <p>WDI 2000–2025 precios mercado, año calendario (CL, CO, BR, MX, PE, AR, ZJ = LAC). 2026f: WB GEP jun-2025 (CL 2,2; CO 2,7; BR 2,2; MX 1,1; PE 2,5; AR 4,5; LAC 2,4). WDI ≈ BCCh Anuario 2024 (&lt;0,3 pp, CdeR2018). Contraste: CEPAL Balance 2025 / IMF WEO abr-2026 LAC 2,3–2,4%. Cálculos: acumulado Π(1+g), CAGR = (índice/100)^{1/n}−1, promedio = media aritmética. Índice base inicio-1=100. 2025 en WDI ya es estimado observado. Per cápita: WB NY.GDP.PCAP.KD.ZG.</p>
+      <p>2000–2025: WB WDI 2026-07-13 (NY.GDP.MKTP.KD.ZG). 2026: WB GEP jun-2025 (CL 2,2 · CO 2,7 · BR 2,2 · MX 1,1 · PE 2,5 · AR 4,5 · LAC 2,4). WDI ≈ BCCh &lt;0,3 pp. Índice inicio-1=100.</p>
     </details>
   </div>
 </footer>
 
 <div id="tooltip" class="tooltip" style="display:none"></div>
 <script>
-// ===== DATA 2000-2026 WDI + 2026 forecast =====
 const rawByCountry = {
-  "CL": {name:"Chile", color:"#8CADCF", vals:{
-    2000:4.97,2001:3.15,2002:3.20,2003:4.72,2004:6.67,2005:5.84,2006:6.05,2007:5.17,2008:3.79,2009:-1.12,2010:5.85,2011:6.22,2012:6.16,2013:3.31,2014:1.79,2015:2.15,2016:1.75,2017:1.36,2018:3.99,2019:0.64,2020:-6.14,2021:11.34,2022:2.06,2023:0.68,2024:2.81,2025:2.46,2026:2.2
-  }},
-  "CO": {name:"Colombia", color:"#CFB88E", vals:{
-    2000:2.92,2001:1.68,2002:2.50,2003:3.92,2004:5.33,2005:4.83,2006:6.72,2007:6.74,2008:3.28,2009:1.14,2010:4.49,2011:6.95,2012:3.91,2013:5.13,2014:4.50,2015:2.96,2016:2.09,2017:1.36,2018:2.56,2019:3.19,2020:-7.19,2021:10.80,2022:7.33,2023:0.84,2024:1.49,2025:2.64,2026:2.7
-  }},
-  "BR": {name:"Brasil", color:"#9BC7BA", vals:{
-    2000:4.39,2001:1.39,2002:3.05,2003:1.14,2004:5.76,2005:3.20,2006:3.96,2007:6.07,2008:5.09,2009:-0.13,2010:7.53,2011:3.97,2012:1.92,2013:3.00,2014:0.50,2015:-3.55,2016:-3.28,2017:1.32,2018:1.78,2019:1.22,2020:-3.28,2021:4.76,2022:3.02,2023:3.24,2024:3.42,2025:2.29,2026:2.2
-  }},
-  "MX": {name:"México", color:"#C58B78", vals:{
-    2000:5.03,2001:-0.45,2002:-0.24,2003:1.19,2004:3.57,2005:2.11,2006:4.81,2007:2.08,2008:0.94,2009:-6.30,2010:4.97,2011:3.44,2012:3.55,2013:0.85,2014:2.50,2015:2.70,2016:1.77,2017:1.87,2018:1.97,2019:-0.39,2020:-8.35,2021:6.05,2022:3.71,2023:3.11,2024:1.35,2025:0.56,2026:1.1
-  }},
-  "PE": {name:"Perú", color:"#ABA0CE", vals:{
-    2000:2.69,2001:0.62,2002:5.45,2003:4.17,2004:4.96,2005:6.29,2006:7.53,2007:8.52,2008:9.13,2009:1.10,2010:8.33,2011:6.33,2012:6.14,2013:5.85,2014:2.38,2015:3.25,2016:3.95,2017:2.52,2018:3.97,2019:2.24,2020:-10.93,2021:13.42,2022:2.82,2023:-0.35,2024:3.52,2025:3.43,2026:2.5
-  }},
-  "AR": {name:"Argentina", color:"#C0C4A8", vals:{
-    2000:-0.79,2001:-4.41,2002:-10.89,2003:8.84,2004:9.03,2005:8.85,2006:8.05,2007:9.01,2008:4.06,2009:-5.92,2010:10.13,2011:6.00,2012:-1.03,2013:2.41,2014:-2.51,2015:2.73,2016:-2.08,2017:2.82,2018:-2.62,2019:-2.00,2020:-9.90,2021:10.44,2022:6.02,2023:-1.86,2024:-1.34,2025:4.37,2026:4.5
-  }},
-  "ZJ": {name:"LatAm", color:"#98A7C1", vals:{
-    2000:3.62,2001:0.53,2002:0.22,2003:2.21,2004:5.72,2005:4.09,2006:5.26,2007:5.29,2008:3.69,2009:-2.30,2010:6.15,2011:4.40,2012:2.65,2013:2.72,2014:1.20,2015:0.24,2016:-0.73,2017:1.55,2018:1.22,2019:0.32,2020:-6.86,2021:7.08,2022:4.09,2023:2.21,2024:2.25,2025:2.32,2026:2.4
-  }},
+  "CL": {name:"Chile", color:"#7B9BBD", vals:{2000:4.97,2001:3.15,2002:3.20,2003:4.72,2004:6.67,2005:5.84,2006:6.05,2007:5.17,2008:3.79,2009:-1.12,2010:5.85,2011:6.22,2012:6.16,2013:3.31,2014:1.79,2015:2.15,2016:1.75,2017:1.36,2018:3.99,2019:0.64,2020:-6.14,2021:11.34,2022:2.06,2023:0.68,2024:2.81,2025:2.46,2026:2.2}},
+  "CO": {name:"Colombia", color:"#BDA67D", vals:{2000:2.92,2001:1.68,2002:2.50,2003:3.92,2004:5.33,2005:4.83,2006:6.72,2007:6.74,2008:3.28,2009:1.14,2010:4.49,2011:6.95,2012:3.91,2013:5.13,2014:4.50,2015:2.96,2016:2.09,2017:1.36,2018:2.56,2019:3.19,2020:-7.19,2021:10.80,2022:7.33,2023:0.84,2024:1.49,2025:2.64,2026:2.7}},
+  "BR": {name:"Brasil", color:"#8EB0A6", vals:{2000:4.39,2001:1.39,2002:3.05,2003:1.14,2004:5.76,2005:3.20,2006:3.96,2007:6.07,2008:5.09,2009:-0.13,2010:7.53,2011:3.97,2012:1.92,2013:3.00,2014:0.50,2015:-3.55,2016:-3.28,2017:1.32,2018:1.78,2019:1.22,2020:-3.28,2021:4.76,2022:3.02,2023:3.24,2024:3.42,2025:2.29,2026:2.2}},
+  "MX": {name:"México", color:"#B17A68", vals:{2000:5.03,2001:-0.45,2002:-0.24,2003:1.19,2004:3.57,2005:2.11,2006:4.81,2007:2.08,2008:0.94,2009:-6.30,2010:4.97,2011:3.44,2012:3.55,2013:0.85,2014:2.50,2015:2.70,2016:1.77,2017:1.87,2018:1.97,2019:-0.39,2020:-8.35,2021:6.05,2022:3.71,2023:3.11,2024:1.35,2025:0.56,2026:1.1}},
+  "PE": {name:"Perú", color:"#9A90BB", vals:{2000:2.69,2001:0.62,2002:5.45,2003:4.17,2004:4.96,2005:6.29,2006:7.53,2007:8.52,2008:9.13,2009:1.10,2010:8.33,2011:6.33,2012:6.14,2013:5.85,2014:2.38,2015:3.25,2016:3.95,2017:2.52,2018:3.97,2019:2.24,2020:-10.93,2021:13.42,2022:2.82,2023:-0.35,2024:3.52,2025:3.43,2026:2.5}},
+  "AR": {name:"Argentina", color:"#A9AB9E", vals:{2000:-0.79,2001:-4.41,2002:-10.89,2003:8.84,2004:9.03,2005:8.85,2006:8.05,2007:9.01,2008:4.06,2009:-5.92,2010:10.13,2011:6.00,2012:-1.03,2013:2.41,2014:-2.51,2015:2.73,2016:-2.08,2017:2.82,2018:-2.62,2019:-2.00,2020:-9.90,2021:10.44,2022:6.02,2023:-1.86,2024:-1.34,2025:4.37,2026:4.5}},
+  "ZJ": {name:"LatAm", color:"#8E97A8", vals:{2000:3.62,2001:0.53,2002:0.22,2003:2.21,2004:5.72,2005:4.09,2006:5.26,2007:5.29,2008:3.69,2009:-2.30,2010:6.15,2011:4.40,2012:2.65,2013:2.72,2014:1.20,2015:0.24,2016:-0.73,2017:1.55,2018:1.22,2019:0.32,2020:-6.86,2021:7.08,2022:4.09,2023:2.21,2024:2.25,2025:2.32,2026:2.4}},
 };
-const pcapByCountry = {
-  "CL": {name:"Chile", color:"#8CADCF", vals:{
-    2000:4.05,2001:2.28,2002:2.22,2003:3.78,2004:5.71,2005:4.86,2006:5.06,2007:4.20,2008:2.89,2009:-1.94,2010:4.96,2011:5.29,2012:5.24,2013:2.47,2014:1.02,2015:1.35,2016:0.95,2017:0.21,2018:2.77,2019:-0.35,2020:-6.89,2021:11.04,2022:1.52,2023:0.19,2024:2.25,2025:1.97,2026:1.4
-  }},
-  "CO": {name:"Colombia", color:"#CFB88E", vals:{
-    2000:1.35,2001:0.15,2002:0.99,2003:2.45,2004:3.87,2005:3.42,2006:5.32,2007:5.37,2008:2.03,2009:0.02,2010:3.40,2011:5.83,2012:2.86,2013:4.10,2014:3.53,2015:2.05,2016:1.22,2017:0.53,2018:1.42,2019:2.00,2020:-8.05,2021:9.61,2022:6.10,2023:-0.15,2024:0.41,2025:1.61,2026:1.8
-  }},
-  "BR": {name:"Brasil", color:"#9BC7BA", vals:{
-    2000:2.96,2001:0.08,2002:1.76,2003:-0.07,2004:4.50,2005:1.99,2006:2.78,2007:4.88,2008:3.92,2009:-1.17,2010:6.39,2011:2.91,2012:0.96,2013:2.10,2014:-0.31,2015:-4.26,2016:-3.99,2017:0.59,2018:1.09,2019:0.56,2020:-3.84,2021:4.32,2022:2.65,2023:2.83,2024:3.00,2025:1.89,2026:1.6
-  }},
-  "MX": {name:"México", color:"#C58B78", vals:{
-    2000:3.52,2001:-1.76,2002:-1.45,2003:-0.03,2004:2.37,2005:0.96,2006:3.63,2007:0.95,2008:-0.15,2009:-7.26,2010:3.89,2011:2.39,2012:2.49,2013:-0.17,2014:1.47,2015:1.67,2016:0.75,2017:0.85,2018:0.94,2019:-1.34,2020:-9.18,2021:5.18,2022:2.81,2023:2.20,2024:0.48,2025:-0.27,2026:0.2
-  }},
-  "PE": {name:"Perú", color:"#ABA0CE", vals:{
-    2000:1.34,2001:-0.68,2002:4.10,2003:2.87,2004:3.69,2005:5.01,2006:6.27,2007:7.29,2008:7.90,2009:0.03,2010:7.16,2011:5.18,2012:5.02,2013:4.72,2014:1.30,2015:2.13,2016:2.79,2017:1.39,2018:2.81,2019:1.10,2020:-11.78,2021:12.18,2022:1.71,2023:-1.38,2024:2.39,2025:2.36,2026:1.5
-  }},
-  "AR": {name:"Argentina", color:"#C0C4A8", vals:{
-    2000:-1.91,2001:-5.45,2002:-11.84,2003:7.72,2004:7.93,2005:7.74,2006:6.94,2007:7.93,2008:3.01,2009:-6.91,2010:8.97,2011:4.88,2012:-2.04,2013:1.39,2014:-3.51,2015:1.66,2016:-3.02,2017:1.92,2018:-3.42,2019:-2.70,2020:-10.34,2021:10.15,2022:5.80,2023:-2.14,2024:-1.68,2025:4.01,2026:3.7
-  }},
-  "ZJ": {name:"LatAm", color:"#98A7C1", vals:{
-    2000:2.18,2001:-0.78,2002:-1.02,2003:0.98,2004:4.45,2005:2.85,2006:4.04,2007:4.09,2008:2.52,2009:-3.35,2010:5.01,2011:3.32,2012:1.62,2013:1.71,2014:0.24,2015:-0.71,2016:-1.63,2017:0.68,2018:0.37,2019:-0.53,2020:-7.61,2021:6.23,2022:3.31,2023:1.50,2024:1.55,2025:1.65,2026:1.6
-  }},
-};
+const order=["CL","CO","BR","MX","PE","AR","ZJ"];
+let startYear=2021,endYear=2026,active=new Set(order),view="growth";
 
-const nominalByCountry = {
-  "CL": {name:"Chile", color:"#8CADCF", vals:{2000:78.34,2001:75.81,2002:76.52,2003:79.95,2004:99.69,2005:122.29,2006:154.67,2007:172.87,2008:179.63,2009:171.95,2010:217.05,2011:250.83,2012:267.12,2013:277.08,2014:260.58,2015:242.45,2016:247.39,2017:277.79,2018:295.49,2019:278.31,2020:254.10,2021:315.51,2022:301.10,2023:335.80,2024:329.26,2025:337.00,2026:344.42}},
-  "CO": {name:"Colombia", color:"#CFB88E", vals:{2000:99.88,2001:98.21,2002:97.82,2003:94.65,2004:117.11,2005:146.57,2006:162.77,2007:207.41,2008:243.98,2009:233.82,2010:286.50,2011:335.43,2012:370.79,2013:380.11,2014:381.24,2015:293.49,2016:282.83,2017:311.89,2018:334.20,2019:323.03,2020:270.35,2021:318.52,2022:345.63,2023:366.90,2024:420.50,2025:431.00,2026:442.60}},
-  "BR": {name:"Brasil", color:"#9BC7BA", vals:{2000:655.45,2001:559.98,2002:507.86,2003:558.23,2004:669.29,2005:891.63,2006:1107.63,2007:1397.11,2008:1695.86,2009:1667.02,2010:2208.84,2011:2616.22,2012:2465.95,2013:2472.81,2014:2462.83,2015:1802.21,2016:1795.96,2017:2063.48,2018:1916.93,2019:1873.29,2020:1476.11,2021:1670.65,2022:1951.92,2023:2191.13,2024:2185.82,2025:2235.00,2026:2284.20}},
-  "MX": {name:"México", color:"#C58B78", vals:{2000:742.06,2001:756.34,2002:772.41,2003:713.28,2004:770.26,2005:877.44,2006:985.21,2007:1043.22,2008:1101.27,2009:900.33,2010:1105.42,2011:1201.09,2012:1208.23,2013:1274.44,2014:1314.44,2015:1213.29,2016:1078.49,2017:1158.91,2018:1221.43,2019:1304.11,2020:1121.06,2021:1316.57,2022:1466.93,2023:1794.41,2024:1830.49,2025:1850.00,2026:1870.35}},
-  "PE": {name:"Perú", color:"#ABA0CE", vals:{2000:51.74,2001:52.02,2002:54.66,2003:61.35,2004:69.74,2005:76.98,2006:88.43,2007:102.29,2008:120.55,2009:120.67,2010:147.53,2011:171.76,2012:192.99,2013:201.77,2014:202.99,2015:189.80,2016:191.91,2017:211.01,2018:224.53,2019:228.35,2020:201.41,2021:226.41,2022:246.17,2023:268.03,2024:291.75,2025:301.00,2026:308.53}},
-  "AR": {name:"Argentina", color:"#C0C4A8", vals:{2000:284.20,2001:268.70,2002:97.73,2003:127.57,2004:164.66,2005:198.74,2006:232.56,2007:287.92,2008:361.56,2009:332.98,2010:423.63,2011:530.16,2012:545.98,2013:552.03,2014:526.32,2015:594.75,2016:557.53,2017:643.63,2018:524.82,2019:447.75,2020:385.74,2021:486.56,2022:633.99,2023:649.46,2024:638.37,2025:666.00,2026:696.00}},
-  "ZJ": {name:"LatAm", color:"#98A7C1", vals:{2000:2326.96,2001:2275.04,2002:2198.66,2003:2338.18,2004:2851.18,2005:3337.38,2006:3851.07,2007:4477.01,2008:5146.93,2009:4684.22,2010:5397.66,2011:6195.10,2012:6222.59,2013:6390.02,2014:6463.28,2015:5289.42,2016:5189.40,2017:5789.90,2018:5661.28,2019:5473.79,2020:4627.83,2021:5383.56,2022:6147.09,2023:6909.98,2024:7088.77,2025:7250.00,2026:7424.00}},
-};
-
-const order = ["CL","CO","BR","MX","PE","AR","ZJ"];
-let startYear=2021, endYear=2026;
-let active = new Set(order);
-let view="growth"; // growth, cum, avg
-
-// build flat data for table etc: array of {year, values}
-function getFilteredYears(){ return d3.range(startYear, endYear+1); }
-function getDataInRange(){
-  const years=getFilteredYears();
-  return years.map(y=>{
-    const row={year:y};
-    const ds = (typeof getDataset==='function'? getDataset(): rawByCountry); order.forEach(k=> row[k]=ds[k].vals[y]);
-    row.isForecast = (y===2026);
-    return row;
-  });
+function getYears(){return d3.range(startYear,endYear+1)}
+function cumFor(start,end){
+  const out={}; order.forEach(k=>{let idx=100; const m={}; for(let y=start;y<=end;y++){const g=rawByCountry[k].vals[y]; if(g!=null) idx*=(1+g/100); m[y]=idx;} out[k]=m;}); return out;
 }
-function computeCumulative(start,end){
-  const ds = (typeof getDataset==='function'? getDataset(): rawByCountry);
-  const countries={};
-  order.forEach(k=>{
-    let idx=100;
-    const cum={};
-    for(let y=start; y<=end; y++){
-      const g=ds[k].vals[y];
-      if(g!=null) idx = idx*(1+g/100);
-      cum[y]=idx;
-    }
-    countries[k]=cum;
-  });
-  return countries;
-}
-function computeStats(start,end){
-  const years = end-start+1;
-  const stats={};
-  const dsStats = (typeof getDataset==='function'? getDataset(): rawByCountry);
-  order.forEach(k=>{
-    const vals = d3.range(start,end+1).map(y=> dsStats[k].vals[y]).filter(v=>v!=null);
-    const avg = d3.mean(vals);
-    // cumulative total growth from start to end: (cumEnd / 100 -1)*100 where cum start-1=100
-    let idx=100;
-    const ds2 = (typeof getDataset==='function'? getDataset(): rawByCountry);
-    for(let y=start;y<=end;y++) idx*=(1+ds2[k].vals[y]/100);
-    const total = idx-100;
-    const cagr = (Math.pow(idx/100, 1/years)-1)*100;
-    const min = d3.min(vals), max=d3.max(vals);
-    stats[k]={avg, total, cagr, min, max, count:years};
-  });
-  return stats;
+function statsFor(s,e){
+  const n=e-s+1, o={}; order.forEach(k=>{const vals=d3.range(s,e+1).map(y=>rawByCountry[k].vals[y]).filter(v=>v!=null); const avg=d3.mean(vals); let idx=100; for(let y=s;y<=e;y++) idx*=(1+rawByCountry[k].vals[y]/100); const tot=idx-100, cagr=(Math.pow(idx/100,1/n)-1)*100; o[k]={avg,tot,cagr,min:d3.min(vals),max:d3.max(vals)};}); return o;
 }
 
-// UI — period chips
-document.querySelectorAll("#periodChips .chip").forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    const [s,e]=btn.dataset.range.split("-").map(Number);
-    startYear=s; endYear=e;
-    syncInputs(); renderAll();
-  });
-});
-const startInput=document.getElementById("startYear");
-const endInput=document.getElementById("endYear");
-const scrubberLabel=document.getElementById("scrubberLabel");
-function populateYearSelects(){
-  if(startInput.tagName==="SELECT" && startInput.options.length===0){
-    for(let y=2000;y<=2026;y++){ startInput.append(new Option(y,y)); endInput.append(new Option(y,y)); }
-  }
-}
-populateYearSelects();
-function syncInputs(){
-  startInput.value=startYear; endInput.value=endYear;
-  if(scrubberLabel) scrubberLabel.textContent = `${startYear} — ${endYear} · ${endYear-startYear+1}A`;
-  if(+startInput.value >= +endInput.value) {
-    if(document.activeElement===startInput) endInput.value = Math.min(2026, +startInput.value+1);
-    else startInput.value = Math.max(2000, +endInput.value-1);
-    startYear=+startInput.value; endYear=+endInput.value;
-    if(scrubberLabel) scrubberLabel.textContent = `${startYear} — ${endYear} · ${endYear-startYear+1}A`;
-  }
-}
-startInput.addEventListener("change", ()=>{ startYear=+startInput.value; syncInputs();
-  document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
-  renderAll();
-});
-endInput.addEventListener("change", ()=>{ endYear=+endInput.value; syncInputs();
-  document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
-  renderAll();
-});
-document.querySelectorAll("[data-view]").forEach(b=>{
-  b.addEventListener("click", ()=>{
-    document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    view=b.dataset.view;
-    renderAll();
-  });
-});
-let metric="gdp";
-function getDataset(){ if(metric==="pcap") return pcapByCountry; if(metric==="nominal") return nominalByCountry; return rawByCountry; }
-document.querySelectorAll("[data-metric]").forEach(b=>{
-  b.addEventListener("click", ()=>{
-    document.querySelectorAll("[data-metric]").forEach(x=>x.classList.remove("active"));
-    b.classList.add("active");
-    metric=b.dataset.metric;
-    // update subtitle
-    const sub=document.querySelector(".subtitle");
-    if(sub) sub.textContent = metric==="gdp" ? "PIB real, var. anual %. 2000–2025 observado; 2026 proyección WB. Punteado = forecast." : "PIB per cápita, var. anual %. 2000–2025 observado; 2026 estimado. Punteado = forecast.";
-    renderAll();
-  });
-});
+// populate selects
+const sSel=document.getElementById("startYear"), eSel=document.getElementById("endYear");
+for(let y=2000;y<=2026;y++){ sSel.append(new Option(y,y)); eSel.append(new Option(y,y)); }
+function syncSel(){ sSel.value=startYear; eSel.value=endYear; document.getElementById("scrubberLabel")?.remove(); }
+syncSel();
+document.querySelectorAll("#periodChips .chip").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("#periodChips .chip").forEach(x=>x.classList.remove("active")); b.classList.add("active"); const [s,e]=b.dataset.range.split("-").map(Number); startYear=s; endYear=e; syncSel(); renderAll();}));
+sSel.addEventListener("change",()=>{startYear=+sSel.value; if(startYear>=endYear) endYear=Math.min(2026,startYear+1); syncSel(); document.querySelectorAll("#periodChips .chip").forEach(x=>x.classList.remove("active")); renderAll();});
+eSel.addEventListener("change",()=>{endYear=+eSel.value; if(endYear<=startYear) startYear=Math.max(2000,endYear-1); syncSel(); document.querySelectorAll("#periodChips .chip").forEach(x=>x.classList.remove("active")); renderAll();});
+document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-view]").forEach(x=>x.classList.remove("active")); b.classList.add("active"); view=b.dataset.view; renderAll();}));
 
-// legend
-let isolatedKey=null;
-let hoveredKey=null;
-function highlightLine(k){
-  hoveredKey=k;
-  const info=document.getElementById("selectionInfo");
-  if(k){
-    const col=rawByCountry[k].color;
-    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span><strong style="color:var(--ink)">${rawByCountry[k].name}</strong> <span style="color:var(--muted)">· click en línea para fijar</span></span>`;
-  } else if(typeof isolatedKey!=="undefined" && isolatedKey){
-    const col=rawByCountry[isolatedKey].color;
-    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span><strong style="color:var(--ink)">${rawByCountry[isolatedKey].name}</strong> <span style="color:var(--muted)">· fijado · click para quitar</span></span>`;
-  } else if(info){
-    const n=active.size;
-    if(n===7) info.textContent="Todos activos · Click en leyenda para filtrar · Click en línea para fijar";
-    else info.textContent=`${n} seleccionados: ${Array.from(active).map(k=>rawByCountry[k].name).join(", ")}`;
-  }
-  // original logic below
-
-  d3.selectAll("#mainChart .line-base").classed("line-dim", false).classed("line-focus", false);
-  d3.selectAll("#mainChart .dot").classed("dot-dim", false).classed("dot-focus", false);
-  if(!k) return;
-  d3.selectAll("#mainChart .line-base").classed("line-dim", function(){return this.dataset.k!==k;});
-  d3.selectAll("#mainChart .line-base.line-dim").style("opacity",0.32);
-  d3.selectAll(`#mainChart .line-${k}`).classed("line-dim",false).classed("line-focus",true).raise();
-  d3.selectAll("#mainChart .dot").classed("dot-dim", function(){return this.dataset.k!==k;});
-  d3.selectAll(`#mainChart .dot-${k}`).classed("dot-dim",false).classed("dot-focus",true).raise();
-}
+// legend simple toggle
 const legendDiv=d3.select("#legend");
 order.forEach(k=>{
-  const c=getDataset()[k] || rawByCountry[k];
-  const col = rawByCountry[k].color;
-  const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k).attr("tabindex","0").attr("role","button").attr("aria-pressed","true").attr("aria-label",c.name);
-  const isLatam=k==="ZJ";
-  item.style("border-color", isLatam?"#8E97A8":null);
-  item.html(`<span class="dot" style="background:${col}"></span> ${c.name}`);
-  item.on("mouseenter", ()=>{ item.classed("is-hover",true); highlightLine(k); })
-      .on("mouseleave", ()=>{ item.classed("is-hover",false); if(!isolatedKey) highlightLine(null); else highlightLine(isolatedKey); })
-      .on("focus", ()=> highlightLine(k)).on("blur", ()=> highlightLine(isolatedKey||null))
-      .on("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault(); item.dispatch("click");} if(e.key==="Escape"){isolatedKey=null; active=new Set(order); legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false); highlightLine(null); renderAll(); }});
-  item.on("click", (e)=>{
-    // Click toggles that country (intuitivo: click para agregar/quitar)
+  const c=rawByCountry[k];
+  const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k).attr("tabindex",0).attr("role","button");
+  item.html(`<span class="dot" style="background:${c.color}"></span> ${c.name}`);
+  item.on("click",()=>{
     if(active.has(k)){
-      if(active.size===1){
-        // si es el único activo, segundo click resetea a todos
-        active=new Set(order);
-        legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false);
-        isolatedKey=null;
-      } else {
-        active.delete(k);
-        isolatedKey=null;
-      }
-    } else {
-      active.add(k);
-      isolatedKey=null;
-    }
-    // si queda 1 solo, marcarlo como aislado visualmente
-    if(active.size===1){
-      const sole=[...active][0];
-      isolatedKey=sole;
-      legendDiv.selectAll(".legend-item").classed("is-isolated",function(){return this.dataset.k===sole;});
-    } else {
-      legendDiv.selectAll(".legend-item").classed("is-isolated",false);
-    }
-    // sincroniza clase off con active
-    legendDiv.selectAll(".legend-item").each(function(){ const kk=this.dataset.k; d3.select(this).classed("off", !active.has(kk)); });
-    renderAll();
-    highlightLine(active.has(k)?k:null);
+      if(active.size===1) return;
+      active.delete(k); item.classed("off",true);
+    } else { active.add(k); item.classed("off",false); }
+    updateInfo(); renderAll();
   });
-  item.on("dblclick", (e)=>{
-    e.preventDefault();
-    // Doble click aísla solo ese país
-    active=new Set([k]);
-    isolatedKey=k;
-    legendDiv.selectAll(".legend-item").classed("off",function(){return this.dataset.k!==k;}).classed("is-isolated",function(){return this.dataset.k===k;});
-    renderAll();
-    setTimeout(()=>highlightLine(k),50);
-  });
+  item.on("mouseenter",()=> highlight(k)).on("mouseleave",()=> highlight(null));
 });
+function highlight(k){
+  d3.selectAll("#mainChart .line").classed("line-dim",false).classed("line-focus",false);
+  if(!k) return;
+  d3.selectAll("#mainChart .line").classed("line-dim",function(){return this.dataset.k!==k});
+  d3.selectAll(`#mainChart .line-${k}`).classed("line-dim",false).classed("line-focus",true).raise();
+}
+function updateInfo(){
+  const el=document.getElementById("selectionInfo");
+  const n=active.size;
+  if(n===7) el.textContent="Todos activos · Click leyenda para filtrar · Hover resalta";
+  else el.textContent=`Filtrados (${n}): ${[...active].map(k=>rawByCountry[k].name).join(", ")}`;
+}
 
 function renderKPIs(){
-  const stats=computeStats(startYear,endYear);
+  const st=statsFor(startYear,endYear);
   const grid=document.getElementById("kpiGrid");
   grid.innerHTML="";
   order.forEach(k=>{
-    const c=rawByCountry[k];
-    const s=stats[k];
-    const isLatam=k==="ZJ";
-    const avgColor = s.avg>2.5? "kpi-pos": s.avg<1? "kpi-neg":"";
-    const cagrColor = s.cagr>2? "kpi-pos": s.cagr<0.5? "kpi-neg":"kpi-gold";
-    const div=document.createElement("div");
-    div.className="kpi"+ (isLatam?" active":"");
-    div.innerHTML=`
-      <div class="kpi-label"><span>${c.name}</span><span style="font-size:10px">${startYear}-${endYear}</span></div>
-      <div class="kpi-country"><span class="kpi-dot" style="background:${c.color}"></span> ${isLatam?"Región":""}</div>
-      <div class="kpi-value">${s.avg>0?"+":""}${s.avg.toFixed(2)}% <small>prom.</small></div>
-      <div class="kpi-sub">Total <strong class="${s.total>0?'kpi-pos':'kpi-neg'}">${s.total>0?"+":""}${s.total.toFixed(1)}%</strong> • CAGR <strong class="${cagrColor}">${s.cagr.toFixed(2)}%</strong><br>Min ${s.min.toFixed(1)}% • Max ${s.max.toFixed(1)}%</div>
-    `;
-    grid.appendChild(div);
+    const c=rawByCountry[k], s=st[k];
+    const d=document.createElement("div");
+    d.className="kpi"+(k==="ZJ"?" active":"");
+    d.innerHTML=`<div class="kpi-label"><span>${c.name}</span><span>${startYear}-${endYear}</span></div><div class="kpi-value">${s.avg>0?"+":""}${s.avg.toFixed(2)}% <small>prom.</small></div><div class="kpi-sub">Total ${s.tot>0?"+":""}${s.tot.toFixed(1)}% · CAGR ${s.cagr.toFixed(2)}%</div>`;
+    grid.appendChild(d);
   });
-  // insight
-  const chile=stats["CL"], lac=stats["ZJ"];
-  const diff = chile.avg - lac.avg;
+  const ch=st["CL"], la=st["ZJ"], diff=ch.avg-la.avg;
   const box=document.getElementById("insightBox");
-  let msg="";
-  if(startYear===2000 && endYear===2026) msg=`En <strong>2000-2026 (26 años)</strong> Chile promedia <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Acumulado: Chile +${chile.total.toFixed(1)}% (índice 100→${(100+chile.total).toFixed(0)}), LatAm +${lac.total.toFixed(1)}%. La década perdida 2015-2024 Chile 2.06% vs LatAm 1.14% — estancamiento.`;
-  else if(startYear===2021) msg=`En <strong>2021-2026</strong> (rebote + normalización) Chile <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Total: Chile +${chile.total.toFixed(1)}%, LatAm +${lac.total.toFixed(1)}%. 2026 es proyección punteada.`;
-  else msg=`Periodo <strong>${startYear}-${endYear} (${endYear-startYear+1} años)</strong>: Chile <strong>${chile.avg.toFixed(2)}%</strong> promedio vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). CAGR Chile ${chile.cagr.toFixed(2)}% vs LatAm ${lac.cagr.toFixed(2)}%.`;
-  box.innerHTML=msg + ` <span style="color:var(--muted)">• 2026 punteado = forecast WB.</span>`;
+  box.textContent=`${startYear}–${endYear} (${endYear-startYear+1}a): Chile ${ch.avg.toFixed(2)}% vs LatAm ${la.avg.toFixed(2)}% (${diff>0?"+":""}${diff.toFixed(2)} pp) · Acumulado Chile +${ch.tot.toFixed(1)}% · LatAm +${la.tot.toFixed(1)}%`;
 }
 
-let xMain, yMain;
-function renderMainChart(){
+function renderMain(){
   const div=document.getElementById("mainChart");
   div.innerHTML="";
-  const width=div.clientWidth;
-  const height=Math.round(Math.max(340, Math.min(460, width * 0.46)));
-  const margin={top:14,right:16,bottom:28,left:44};
-  const w=width-margin.left-margin.right;
-  const h=height-margin.top-margin.bottom;
-  const svg=d3.select("#mainChart").append("svg").attr("viewBox",`0 0 ${width} ${height}`).attr("preserveAspectRatio","xMidYMid meet").style("width","100%").style("height","auto").attr("width",width).attr("height",height);
-  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-  const years=getFilteredYears();
-  xMain=d3.scaleLinear().domain([startYear, endYear]).range([0,w]);
-  // y domain
-  let y, yDomain;
-  const dsForY = (typeof getDataset==='function'? getDataset(): rawByCountry);
-  const isNominal = (typeof metric!=="undefined" && metric==="nominal");
-  if(isNominal){
-    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> dsForY[k].vals[y])).filter(v=>v!=null);
-    const lo=d3.min(vals)*0.88, hi=d3.max(vals)*1.12;
-    y=d3.scaleLog().domain([Math.max(30, lo), hi]).range([h,0]).nice();
-    yDomain=[lo, hi];
-  } else if(view==="growth"){
-    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> dsForY[k].vals[y])).filter(v=>v!=null);
-    const min=d3.min(vals), max=d3.max(vals);
-    const pad=(max-min)*0.18;
-    yDomain=[Math.floor(min-pad), Math.ceil(max+pad)];
-    y=d3.scaleLinear().domain(yDomain).range([h,0]).nice();
-  } else if(view==="cum"){
-    const cum=computeCumulative(startYear,endYear);
-    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> cum[k][y]));
-    const min=d3.min(vals)-5, max=d3.max(vals)+5;
-    yDomain=[Math.floor(min/10)*10, Math.ceil(max/10)*10];
-    y=d3.scaleLinear().domain(yDomain).range([h,0]).nice();
+  const W=div.clientWidth, H=Math.round(Math.max(340, Math.min(460, W*0.46)));
+  const m={top:12,right:14,bottom:28,left:44}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const svg=d3.select("#mainChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).attr("preserveAspectRatio","xMidYMid meet").style("width","100%").style("height","auto").attr("width",W).attr("height",H);
+  const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+  const years=getYears();
+  const x=d3.scaleLinear().domain([startYear,endYear]).range([0,w]);
+  const cum=cumFor(startYear,endYear);
+  let y;
+  if(view==="cum"){
+    const vals=years.flatMap(y=>[...active].map(k=>cum[k][y]));
+    y=d3.scaleLinear().domain([d3.min(vals)*0.97-2, d3.max(vals)*1.02+2]).range([h,0]).nice();
   } else {
-    const vals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> dsForY[k].vals[y]));
-    yDomain=[Math.floor(d3.min(vals)-1), Math.ceil(d3.max(vals)+1)];
-    y=d3.scaleLinear().domain(yDomain).range([h,0]).nice();
+    const vals=years.flatMap(y=>[...active].map(k=>rawByCountry[k].vals[y]));
+    const min=d3.min(vals), max=d3.max(vals), pad=(max-min)*0.18;
+    y=d3.scaleLinear().domain([Math.floor(min-pad), Math.ceil(max+pad)]).range([h,0]).nice();
   }
-  yMain=y;
-  // grid
-  g.append("g").attr("class","grid").call(d3.axisLeft(y).ticks(8).tickSize(-w).tickFormat("")).selectAll("line").attr("stroke-opacity",0.1);
-  g.select(".grid .domain").remove();
-  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(xMain).ticks(Math.min(12, years.length)).tickFormat(d3.format("d")));
-  if(isNominal) g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6,"~s").tickFormat(d=> d>=1000? "$"+(d/1000).toFixed(1)+"T" : "$"+d.toFixed(0)+"B"));
-  else g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(8).tickFormat(d=> d + (view==="growth"||view==="avg"?"%":"")));
-  if(view==="growth"||view==="avg") g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(0)).attr("y2",y(0)).attr("stroke","#243347").attr("stroke-dasharray","4 4").attr("opacity",0.9);
-  // title update
-  const metricLabel = (typeof metric!=="undefined" && metric==="pcap") ? "PIB per cápita" : "PIB real";
-  document.getElementById("chartTitle").innerHTML = view==="cum" ? `Índice acumulado <em>— base ${startYear-1}=100 · ${metricLabel}</em>` : view==="avg" ? `Crecimiento + promedio · ${metricLabel}` : `Crecimiento anual <em>— var. % ${metricLabel}</em>`;
-  // draw lines
+  g.append("g").attr("class","grid").call(d3.axisLeft(y).ticks(6).tickSize(-w).tickFormat("")).selectAll("line").attr("stroke-opacity",0.08);
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(Math.min(10,years.length)).tickFormat(d3.format("d")));
+  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6).tickFormat(d=>d+(view==="cum"?"":"%")));
+  if(view!=="cum") g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(0)).attr("y2",y(0)).attr("stroke","#23344B").attr("stroke-dasharray","4 4").attr("opacity",0.6);
+  document.getElementById("chartTitle").innerHTML = view==="cum"?`Índice acumulado <em>— base ${startYear-1}=100</em>`:`Crecimiento anual <em>— var. %</em>`;
   order.forEach(k=>{
     if(!active.has(k)) return;
     const c=rawByCountry[k];
-    const dsMain = (typeof getDataset==='function'? getDataset(): rawByCountry);
-    const data=years.map(y=> ({y, v: dsMain[k].vals[y], cum: computeCumulative(startYear,endYear)[k][y], isF: y===2026}));
-    const yVal = d=> view==="cum" ? d.cum : d.v;
-    // split solid vs forecast
-    const solid=data.filter(d=> !d.isF && d.v!=null);
-    const forecast=data.filter(d=> d.y>=2025); // 2025-2026 includes 2025 observed but we want dashed only 2026 segment
-    const lineSolid=d3.line().defined(d=> yVal(d)!=null).x(d=>xMain(d.y)).y(d=>y(yVal(d))).curve(d3.curveMonotoneX);
-    const lineF=d3.line().defined(d=> yVal(d)!=null).x(d=>xMain(d.y)).y(d=>y(yVal(d))).curve(d3.curveMonotoneX);
-    // halo for contrast on dark
-    g.append("path").datum(solid).attr("fill","none").attr("stroke","#0E141E").attr("stroke-width", k==="ZJ"?5.2:4.4).attr("opacity",0.45).attr("d", lineSolid).attr("stroke-linecap","round").attr("stroke-linejoin","round");
-    g.append("path").datum(solid).attr("class",`line-base line-${k}`).attr("data-k",k).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.8:2.15).attr("d", lineSolid).attr("opacity", k==="ZJ"?1:0.95).attr("stroke-linecap","round").attr("stroke-linejoin","round");
-    // forecast last segment dashed (2025->2026)
-    if(data.some(d=>d.isF)){
-      const lastTwo=data.slice(-2);
-      g.append("path").datum(lastTwo).attr("fill","none").attr("stroke","#0E141E").attr("stroke-width", k==="ZJ"?5.2:4.4).attr("opacity",0.35).attr("d", lineF);
-      g.append("path").datum(lastTwo).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.8:2.15).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d", lineF);
-      // dot forecast
-      const last=lastTwo[1];
-      g.append("circle").attr("class",`dot dot-${k}`).attr("data-k",k).attr("cx", xMain(last.y)).attr("cy", y(yVal(last))).attr("r",3.5).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1.2);
+    const data=years.map(y=>({y, v:c.vals[y], cum:cum[k][y], f:y===2026}));
+    const yv=d=> view==="cum"?d.cum:d.v;
+    const line=d3.line().defined(d=>yv(d)!=null).x(d=>x(d.y)).y(d=>y(yv(d))).curve(d3.curveMonotoneX);
+    // halo
+    g.append("path").datum(data.filter(d=>!d.f)).attr("class",`line line-${k}`).attr("data-k",k).attr("fill","none").attr("stroke","#0E141E").attr("stroke-width",4.2).attr("opacity",0.35).attr("d",line);
+    g.append("path").datum(data.filter(d=>!d.f)).attr("class",`line line-${k}`).attr("data-k",k).attr("fill","none").attr("stroke",c.color).attr("stroke-width",2).attr("d",line);
+    if(data.some(d=>d.f)){
+      const last2=data.slice(-2);
+      g.append("path").datum(last2).attr("class",`line line-${k}`).attr("data-k",k).attr("fill","none").attr("stroke",c.color).attr("stroke-width",2).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d",line);
+      g.append("circle").attr("cx",x(last2[1].y)).attr("cy",y(yv(last2[1]))).attr("r",3).attr("fill",c.color).attr("stroke","#0E141E").attr("stroke-width",1);
     }
-    // dots for solid points
-    solid.forEach(d=>{
-      g.append("circle").attr("class",`dot dot-${k}`).attr("data-k",k).attr("cx", xMain(d.y)).attr("cy", y(yVal(d))).attr("r",2.8).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1).attr("opacity",0.95);
+    data.filter(d=>!d.f).forEach(d=> g.append("circle").attr("cx",x(d.y)).attr("cy",y(yv(d))).attr("r",2.4).attr("fill",c.color).attr("stroke","#0E141E").attr("stroke-width",0.8));
+  });
+  // tooltip simple — muestra todos los activos, no tapa, umbral 40px
+  const tip=d3.select("#tooltip");
+  const hl=g.append("line").attr("stroke","#2a364a").attr("stroke-dasharray","4 4").style("display","none");
+  const ov=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent").style("cursor","crosshair");
+  ov.on("mousemove", (ev)=>{
+    const [mx,my]=d3.pointer(ev);
+    const yr=Math.round(x.invert(mx));
+    const cl=Math.max(startYear, Math.min(endYear, yr));
+    // threshold: if mouse far from any line (>40px) don't highlight
+    let best=null, bestD=Infinity;
+    [...active].forEach(k=>{
+      const v=rawByCountry[k].vals[cl]; if(v==null) return;
+      const yv=view==="cum"?cum[k][cl]:v;
+      const d=Math.abs(y(yv)-my);
+      if(d<bestD){bestD=d; best=k;}
     });
-    // avg line if view avg
-    if(view==="avg"){
-      const avg=d3.mean(data.filter(d=>!d.isF).map(d=>d.v));
-      g.append("line").attr("x1", xMain(startYear)).attr("x2", xMain(endYear)).attr("y1", y(avg)).attr("y2", y(avg)).attr("stroke",c.color).attr("stroke-width",1).attr("stroke-dasharray","3 3").attr("opacity",0.5);
+    const xPos=x(cl);
+    if(bestD>48){
+      hl.style("display","none"); tip.style("display","none"); highlight(null); return;
     }
-  });
-  // overlay tooltip
-    // compact tooltip inside chart (no cover) + highlight
-  let pinnedYear=null, pinnedKey=null;
-  let tt = d3.select("#mainChart").selectAll(".tooltip-compact").data([null]);
-  tt = tt.enter().append("div").attr("class","tooltip-compact").attr("id","ttCompact").merge(tt);
-  tt.style("display","none");
-  const hoverLine = g.append("line").attr("class","hover-line").attr("stroke","#2a364a").attr("stroke-dasharray","4 4").style("display","none");
-  function showHover(clamped, my, isPinned){
-    const xPos=xMain(clamped);
-    hoverLine.style("display",null).attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h);
-    const dsTT = (typeof getDataset==='function'? getDataset(): rawByCountry);
-    let best=null, bestDist=Infinity;
-    if(my!=null){
-      order.forEach(k=>{
-        if(!active.has(k)) return;
-        const v=dsTT[k].vals[clamped]; if(v==null) return;
-        const yv = view==="cum" ? computeCumulative(startYear,endYear)[k][clamped] : v;
-        const yp = y(yv);
-        const dist=Math.abs(yp - my);
-        if(dist<bestDist){bestDist=dist; best=k;}
-      });
-    } else {
-      best = [...active][0];
-    }
-    if(!best) return;
-    if(!isPinned) highlightLine(best);
-    const keys = order.filter(k=> active.has(k));
-    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''} · ${view==="cum"?"índice": metric==="nominal"?"USD":"var. %"}${isPinned?' <span style="color:var(--accent-2);font-size:10px">· fijado</span>':''}</div>`;
-    keys.forEach(k=>{
-      const c=rawByCountry[k];
-      const v=dsTT[k].vals[clamped]; if(v==null) return;
-      const cum=computeCumulative(startYear,endYear)[k][clamped];
-      const isNom = (typeof metric!=="undefined" && metric==="nominal");
-      let valStr;
-      if(isNom) valStr = "$"+v.toFixed(0)+"B";
-      else valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
-      const col=v>=0? "var(--pos)":"var(--neg)";
-      html+=`<div class="tt-row" style="${best===k? 'background:var(--accent-bg);border-radius:4px;padding:2px 4px;margin:0 -4px;':''}"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${best===k?c.color:col}">${valStr}</strong></div>`;
+    hl.style("display",null).attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h);
+    highlight(best);
+    let html=`<div class="tt-date">${cl} ${cl===2026?'<span style="color:var(--accent-2)">· proy.</span>':''}</div>`;
+    [...active].forEach(k=>{
+      const c=rawByCountry[k], v=c.vals[cl]; if(v==null) return;
+      const yv=view==="cum"?cum[k][cl]:v;
+      const s=view==="cum"? yv.toFixed(1) : v.toFixed(2)+"%";
+      const isBest=k===best;
+      html+=`<div class="tt-row" style="${isBest?'background:var(--accent-bg);border-radius:4px;padding:2px 4px;margin:0 -4px':''}"><span><span style="width:7px;height:7px;border-radius:50%;background:${c.color};display:inline-block;margin-right:6px"></span>${c.name}</span><strong>${s}</strong></div>`;
     });
-    if(!isPinned) html+=`<div style="font-size:10px;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Click en línea para fijar</div>`;
-    else html+=`<div style="font-size:10px;color:var(--accent-2);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Fijado · Click en otro punto para mover · Esc para soltar</div>`;
-    tt.html(html).style("display","block");
-    const ttNode=tt.node(); const ttW=200, ttH=ttNode.offsetHeight||120;
-    let left = w - ttW - 10;
-    let top = 10;
-    tt.style("left", left+"px").style("top", top+"px");
-    if(isPinned){ pinnedYear=clamped; pinnedKey=best; }
-  }
-  const overlay=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent").style("cursor","crosshair");
-  overlay.on("mousemove", (event)=>{
-    if(pinnedYear!==null) return;
-    const [mx,my]=d3.pointer(event);
-    const year=Math.round(xMain.invert(mx));
-    const clamped=Math.max(startYear, Math.min(endYear, year));
-    showHover(clamped, my, false);
-  }).on("mouseleave", ()=>{
-    if(pinnedYear!==null) return;
-    hoverLine.style("display","none"); tt.style("display","none");
-    highlightLine(isolatedKey||null);
-  }).on("click", (event)=>{
-    const [mx,my]=d3.pointer(event);
-    const year=Math.round(xMain.invert(mx));
-    const clamped=Math.max(startYear, Math.min(endYear, year));
-    if(pinnedYear===clamped){
-      pinnedYear=null; pinnedKey=null;
-      tt.style("display","none"); hoverLine.style("display","none");
-      highlightLine(isolatedKey||null);
-    } else {
-      showHover(clamped, my, true);
-      highlightLine(pinnedKey);
-    }
-  });
-  d3.select(document).on("keydown.pinned", (event)=>{
-    if(event.key==="Escape" && pinnedYear!==null){
-      pinnedYear=null; pinnedKey=null;
-      tt.style("display","none"); hoverLine.style("display","none");
-      highlightLine(isolatedKey||null);
-    }
-  });
+    tip.html(html).style("display","block");
+    const r=div.getBoundingClientRect(), tw=200, th=tip.node().offsetHeight||100;
+    let l = xPos < w*0.6 ? xPos+12 : xPos-tw-12;
+    l=Math.max(8, Math.min(w-tw-8, l));
+    let tpos = 10;
+    tip.style("left",(r.left + m.left + l)+"px").style("top",(r.top + m.top + tpos)+"px").style("position","fixed");
+  }).on("mouseleave",()=>{ hl.style("display","none"); tip.style("display","none"); highlight(null); });
 }
 
-function renderBarChart(){
+function renderBar(){
   const div=document.getElementById("barChart");
   div.innerHTML="";
-  const width=div.clientWidth;
-  const height=380;
-  const margin={top:16,right:16,bottom:24,left:110};
-  const w=width-margin.left-margin.right;
-  const h=height-margin.top-margin.bottom;
-  const svg=d3.select("#barChart").append("svg").attr("width",width).attr("height",height);
-  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-  const stats=computeStats(startYear,endYear);
-  const dsBar = (typeof getDataset==='function'? getDataset(): rawByCountry);
-  const isNomBar = (typeof metric!=="undefined" && metric==="nominal");
-  const countries=order.filter(k=>k!=="ZJ").map(k=> {
-    if(isNomBar){
-      const val = dsBar[k].vals[endYear] || dsBar[k].vals[2024];
-      return {k, name:dsBar[k].name, color:dsBar[k].color, avg: val, isNom:true};
-    }
-    return {k, name:dsBar[k].name, color:dsBar[k].color, avg:stats[k].avg};
-  });
-  countries.sort((a,b)=> b.avg - a.avg);
-  const y=d3.scaleBand().domain(countries.map(d=>d.name)).range([0,h]).padding(0.18);
-  let x;
-  if(isNomBar) x=d3.scaleLog().domain([30, d3.max(countries,d=>d.avg)*1.1]).range([0,w]);
-  else x=d3.scaleLinear().domain([-1, d3.max(countries,d=>d.avg)*1.15 || 6]).range([0,w]);
-  const xNeg = d3.min(countries,d=>d.avg);
-  if(xNeg<0) x.domain([Math.min(-2, xNeg*1.2), d3.max(countries,d=>d.avg)*1.15]);
-  g.append("g").attr("class","grid").call(d3.axisBottom(x).ticks(5).tickSize(h).tickFormat("")).selectAll("line").attr("stroke-opacity",0.06);
-  g.select(".grid .domain").remove();
-  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+"%"));
+  const W=div.clientWidth, H=360, m={top:12,right:14,bottom:24,left:110}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const svg=d3.select("#barChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).style("width","100%").style("height","auto");
+  const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+  const st=statsFor(startYear,endYear);
+  const arr=[...active].filter(k=>k!=="ZJ").map(k=>({k,name:rawByCountry[k].name,color:rawByCountry[k].color,avg:st[k].avg})).sort((a,b)=>b.avg-a.avg);
+  if(!arr.length) return;
+  const y=d3.scaleBand().domain(arr.map(d=>d.name)).range([0,h]).padding(0.18);
+  const x=d3.scaleLinear().domain([Math.min(-1,d3.min(arr,d=>d.avg)*1.1), Math.max(2, d3.max(arr,d=>d.avg)*1.1)]).range([0,w]);
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(4).tickFormat(d=>d+"%"));
   g.append("g").attr("class","axis").call(d3.axisLeft(y));
-  g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",h).attr("stroke","#243347").attr("stroke-dasharray","4 4");
-  countries.forEach(d=>{
-    const isForecast = endYear===2026;
-    const x0 = isNomBar ? x(30) : x(Math.min(0,d.avg));
-    const x1 = x(d.avg);
-    g.append("rect").attr("y", y(d.name)).attr("x", Math.min(x0,x1)).attr("width", Math.abs(x1-x0)).attr("height", y.bandwidth()).attr("fill", d.color).attr("opacity", isForecast?0.62:0.9).attr("rx",4);
-    if(isForecast) g.append("rect").attr("y", y(d.name)).attr("x", x(Math.min(0,d.avg))).attr("width", Math.abs(x(d.avg)-x(0))).attr("height", y.bandwidth()).attr("fill","none").attr("stroke",d.color).attr("stroke-dasharray","4 3").attr("rx",4);
-    g.append("text").attr("x", x(d.avg)+(d.avg>=0?6:-6)).attr("y", y(d.name)+y.bandwidth()/2).attr("dy","0.35em").attr("text-anchor", d.avg>=0?"start":"end").attr("fill","#eef2f7").attr("font-size","11px").attr("font-weight","600").text(d.avg.toFixed(2)+"%");
-  });
-  // LatAm avg line
-  const lacAvg=stats["ZJ"].avg;
-  g.append("line").attr("x1", x(lacAvg)).attr("x2", x(lacAvg)).attr("y1",0).attr("y2",h).attr("stroke","#98A7C1").attr("stroke-width",1.4).attr("stroke-dasharray","6 4").attr("opacity",0.9);
-  g.append("text").attr("x", x(lacAvg)).attr("y", -6).attr("text-anchor","middle").attr("fill","#98A7C1").attr("font-size","10px").attr("font-family","IBM Plex Mono").text(`LatAm ${lacAvg.toFixed(2)}%`);
+  g.append("line").attr("x1",x(0)).attr("x2",x(0)).attr("y1",0).attr("y2",h).attr("stroke","#23344B").attr("stroke-dasharray","4 4");
+  arr.forEach(d=>{ g.append("rect").attr("y",y(d.name)).attr("x",x(Math.min(0,d.avg))).attr("width",Math.abs(x(d.avg)-x(0))).attr("height",y.bandwidth()).attr("fill",d.color).attr("rx",4); g.append("text").attr("x",x(d.avg)+(d.avg>=0?6:-6)).attr("y",y(d.name)+y.bandwidth()/2).attr("dy","0.35em").attr("text-anchor",d.avg>=0?"start":"end").attr("fill","#E6EAF0").attr("font-size","11px").text(d.avg.toFixed(2)+"%"); });
 }
 
-function renderCumChart(){
+function renderCum(){
   const div=document.getElementById("cumChart");
   div.innerHTML="";
-  const width=div.clientWidth;
-  const height=360;
-  const margin={top:14,right:16,bottom:28,left:44};
-  const w=width-margin.left-margin.right;
-  const h=height-margin.top-margin.bottom;
-  const svg=d3.select("#cumChart").append("svg").attr("width",width).attr("height",height);
-  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-  const years=getFilteredYears();
-  const cum=computeCumulative(startYear,endYear);
-  const allVals=years.flatMap(y=> order.filter(k=>active.has(k)).map(k=> cum[k][y]));
-  const y=d3.scaleLinear().domain([d3.min(allVals)*0.97, d3.max(allVals)*1.03]).range([h,0]).nice();
+  const W=div.clientWidth, H=340, m={top:10,right:14,bottom:28,left:44}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const svg=d3.select("#cumChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).style("width","100%").style("height","auto");
+  const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
+  const years=getYears(), cum=cumFor(startYear,endYear);
+  const vals=years.flatMap(y=>[...active].map(k=>cum[k][y]));
+  const y=d3.scaleLinear().domain([d3.min(vals)*0.97, d3.max(vals)*1.03]).range([h,0]).nice();
   const x=d3.scaleLinear().domain([startYear,endYear]).range([0,w]);
-  g.append("g").attr("class","grid").call(d3.axisLeft(y).ticks(6).tickSize(-w).tickFormat("")).selectAll("line").attr("stroke-opacity",0.08);
-  g.select(".grid .domain").remove();
-  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(Math.min(10, years.length)).tickFormat(d3.format("d")));
-  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6));
-  g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(100)).attr("y2",y(100)).attr("stroke","#243347").attr("stroke-dasharray","4 4");
-  order.forEach(k=>{
-    if(!active.has(k)) return;
-    const c=rawByCountry[k];
-    const data=years.map(y=> ({y, cum:cum[k][y], isF: y===2026}));
-    const lineSolid=d3.line().x(d=>x(d.y)).y(d=>y(d.cum)).curve(d3.curveMonotoneX);
-    const solid=data.filter(d=>!d.isF);
-    const forecast=data.slice(-2);
-    g.append("path").datum(solid).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.4:1.9).attr("d", lineSolid);
-    if(forecast.length===2) g.append("path").datum(forecast).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.4:1.9).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d", lineSolid);
-    // end label
-    const last=data[data.length-1];
-    g.append("text").attr("x", x(last.y)+4).attr("y", y(last.cum)).attr("dy","0.35em").attr("fill", c.color).attr("font-size","11px").attr("font-weight","600").text(`${c.name} ${last.cum.toFixed(0)}`);
-  });
+  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(Math.min(8,years.length)).tickFormat(d3.format("d")));
+  g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(5));
+  order.forEach(k=>{ if(!active.has(k)) return; const c=rawByCountry[k]; const data=years.map(y=>({y,cum:cum[k][y]})); const line=d3.line().x(d=>x(d.y)).y(d=>y(d.cum)).curve(d3.curveMonotoneX); g.append("path").datum(data).attr("fill","none").attr("stroke",c.color).attr("stroke-width",2).attr("d",line); });
 }
 
 function renderTable(){
-  const tbody=document.querySelector("#dataTable tbody");
-  const search=document.getElementById("search").value.toLowerCase();
-  const sortBy=document.getElementById("sortBy").value;
-  let rows=getDataInRange().filter(r=>{
-    if(!search) return true;
-    return String(r.year).includes(search) || order.some(k=> rawByCountry[k].name.toLowerCase().includes(search));
-  });
-  if(sortBy==="year-desc") rows.sort((a,b)=> b.year - a.year);
-  else if(sortBy==="year-asc") rows.sort((a,b)=> a.year - b.year);
-  else if(sortBy==="country") rows.sort((a,b)=> order.indexOf(a) - order.indexOf(b));
-  else if(sortBy==="growth-desc"){
-    // sort by Chile growth desc
-    rows.sort((a,b)=> (b.CL||-999) - (a.CL||-999));
-  }
-  tbody.innerHTML="";
+  const tb=document.querySelector("#dataTable tbody");
+  const q=document.getElementById("search").value.toLowerCase();
+  let rows=getYears().map(y=>{const r={year:y}; order.forEach(k=>r[k]=rawByCountry[k].vals[y]); return r;}).filter(r=>!q||String(r.year).includes(q));
+  const sort=document.getElementById("sortBy").value;
+  if(sort==="year-desc") rows.sort((a,b)=>b.year-a.year); else rows.sort((a,b)=>a.year-b.year);
+  tb.innerHTML="";
   rows.forEach(r=>{
     const tr=document.createElement("tr");
-    let html=`<td><strong>${r.year}</strong>${r.isForecast?' <span style="font-size:10px;color:var(--gold);border:1px solid var(--gold);padding:1px 4px;border-radius:4px;margin-left:6px">2026f</span>':''}</td>`;
-    order.forEach(k=>{
-      const v=r[k];
-      const cls = v==null? "neutral": v>2.5? "pos": v<0? "neg":"";
-      const fc = r.isForecast? ' style="opacity:0.7;font-style:italic"':"";
-      html+=`<td class="${cls}"${fc}>${v==null?"—": (v>0?"+":"")+v.toFixed(2)+"%"}</td>`;
-    });
-    tr.innerHTML=html;
-    tbody.appendChild(tr);
+    let h=`<td><strong>${r.year}</strong>${r.year===2026?' <span style="font-size:10px;border:1px solid var(--line2);padding:1px 4px;border-radius:4px">f</span>':''}</td>`;
+    order.forEach(k=>{const v=r[k]; const cls=v>2.5?"pos":v<0?"neg":""; h+=`<td class="${cls}">${v==null?"—":(v>0?"+":"")+v.toFixed(2)+"%"}</td>`});
+    tr.innerHTML=h; tb.appendChild(tr);
   });
 }
 
-function renderBrush(){
-  // scrubber inside sticky dock
-  const div=document.getElementById("scrubber");
-  if(!div) return;
-  div.innerHTML="";
-  const width=div.clientWidth;
-  const height=42;
-  const margin={top:4,right:8,bottom:16,left:8};
-  const w=width-margin.left-margin.right;
-  const h=height-margin.top-margin.bottom;
-  const svg=d3.select("#scrubber").append("svg").attr("width",width).attr("height",height);
-  const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
-  const x=d3.scaleLinear().domain([2000,2026]).range([0,w]);
-  const y=d3.scaleLinear().domain([-11, 14]).range([h,0]);
-  g.append("g").attr("class","axis").attr("transform",`translate(0,${h})`).call(d3.axisBottom(x).ticks(9).tickFormat(d3.format("d"))).selectAll("text").attr("font-size","9px");
-  order.forEach(k=>{
-    if(!active.has(k)) return;
-    const c=rawByCountry[k];
-    const data=d3.range(2000,2027).map(y=> ({y, v:c.vals[y]})).filter(d=>d.v!=null);
-    const line=d3.line().x(d=>x(d.y)).y(d=>y(d.v)).curve(d3.curveMonotoneX);
-    g.append("path").datum(data).attr("fill","none").attr("stroke",c.color).attr("stroke-width",1).attr("opacity",0.75).attr("d", line);
-  });
-  // highlight selected range
-  g.append("rect").attr("x", x(startYear)).attr("width", Math.max(2, x(endYear)-x(startYear))).attr("y",0).attr("height",h).attr("fill","rgba(184,160,130,0.14)").attr("stroke","var(--accent)").attr("stroke-width",1).attr("rx",3);
-  const brush=d3.brushX().extent([[0,0],[w,h]]).on("end", (event)=>{
-    if(!event.selection) return;
-    const [x0,x1]=event.selection.map(x.invert).map(v=> Math.round(v));
-    startYear=Math.max(2000, Math.min(x0,x1));
-    endYear=Math.min(2026, Math.max(x0,x1));
-    if(startYear===endYear) endYear=Math.min(2026, startYear+1);
-    syncInputs();
-    document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
-    renderAll();
-  });
-  g.append("g").attr("class","brush").call(brush);
-  // also keep subtle brush below hero for reference (optional)
-  const div2=document.getElementById("brushChart");
-  if(div2){ div2.style.display="none"; }
-}
-
-function renderAll(){
-  renderKPIs();
-  renderMainChart();
-  renderBarChart();
-  renderCumChart();
-  renderTable();
-  renderBrush();
-  if(typeof isolatedKey!=="undefined" && isolatedKey) setTimeout(()=>highlightLine(isolatedKey),60);
-  else setTimeout(()=>highlightLine(null),30);
-}
-
+function renderAll(){ renderKPIs(); renderMain(); renderBar(); renderCum(); renderTable(); }
 document.getElementById("search").addEventListener("input", renderTable);
 document.getElementById("sortBy").addEventListener("change", renderTable);
-document.getElementById("exportCSV").addEventListener("click", ()=>{
-  const years=getFilteredYears();
-  let csv="Year,"+order.map(k=>rawByCountry[k].name).join(",")+"\n";
-  years.forEach(y=>{
-    csv+=y+","+order.map(k=>{
-      const v=rawByCountry[k].vals[y];
-      return v==null?"":v.toFixed(2);
-    }).join(",")+"\n";
-  });
-  const metricSuffix = (typeof metric!=="undefined" && metric==="pcap") ? "_pcap" : "";
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a"); a.href=url; a.download=`latam_growth${metricSuffix}_${startYear}-${endYear}.csv`; a.click(); URL.revokeObjectURL(url);
+document.getElementById("exportCSV").addEventListener("click",()=>{
+  const years=getYears(); let csv="Year,"+order.map(k=>rawByCountry[k].name).join(",")+"\n";
+  years.forEach(y=>{csv+=y+","+order.map(k=>rawByCountry[k].vals[y].toFixed(2)).join(",")+"\n";});
+  const b=new Blob([csv],{type:"text/csv"}), u=URL.createObjectURL(b), a=document.createElement("a"); a.href=u; a.download=`latam_${startYear}-${endYear}.csv`; a.click(); URL.revokeObjectURL(u);
 });
-
 window.addEventListener("resize", renderAll);
 renderAll();
 </script>
