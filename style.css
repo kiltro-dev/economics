@@ -94,8 +94,6 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .card--hero .chart{height:auto;min-height:340px;margin-bottom:0;background:transparent}
 #mainChart{height:auto;min-height:340px;background:transparent}
 #mainChart svg{width:100%;height:auto;display:block;background:transparent}
-#mainChart .axis path{display:none}
-#mainChart .grid line:first-child{stroke:transparent}
 .card-header{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;margin-bottom:10px}
 .card h2{margin:0;font-family:Fraunces, Georgia, serif;font-size:17px;letter-spacing:-0.015em;line-height:1.1;font-weight:500}
 .card h2 em{font-style:normal;color:var(--muted);font-weight:500}
@@ -144,8 +142,8 @@ table.data tbody tr:hover td{background:#131a24}
 .tooltip .tt-row{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
 .tooltip .tt-row + .tt-row{border-top:1px dashed #1e2936}
 .axis text{fill:var(--muted2);font-size:10.5px;font-family:Inter, sans-serif}
-.axis path, .axis line{stroke:var(--line2)}
-.grid line{stroke:var(--grid);stroke-dasharray:2 3}
+.axis path, .axis line{stroke:var(--muted2);opacity:0.35}
+.grid line{stroke:var(--grid);stroke-dasharray:2 3;opacity:0.55}
 .line{fill:none;stroke-linejoin:round;stroke-linecap:round}
 
 /* highlight — professional */
