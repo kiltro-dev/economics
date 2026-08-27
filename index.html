@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LatAm FX Dashboard | Rally cambiario MSCI 2022-2026</title>
+<meta name="description" content="Dashboard interactivo del tipo de cambio en Latinoamérica 2022-2026. Datos BCRP. ¿El peso chileno realmente quedó fuera del rally?">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+  <div class="container">
+    <div class="header-top">
+      <div>
+        <h1>LatAm FX <span>Rally 2022-2026</span></h1>
+        <p class="subtitle">¿Indicadores de corto plazo? Análisis de 55 meses de tipo de cambio vs USD</p>
+      </div>
+      <div class="header-actions">
+        <a href="https://estadisticas.bcrp.gob.pe" target="_blank" class="badge">Fuente: BCRP • FMI/Reuters</a>
+        <button id="exportCSV" class="btn btn-outline">↓ Descargar CSV</button>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi kpi-chile">
+        <div class="kpi-label">Chile CLP <small>Jul 2026</small></div>
+        <div class="kpi-value">931.52 <span class="unit">CLP/USD</span></div>
+        <div class="kpi-delta neg" id="kpi-clp-ytd">YTD +5.52% • 12m -2.37%</div>
+        <div class="kpi-note">Única que se deprecia en 2026 YTD (foto corta)</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Colombia COP</div>
+        <div class="kpi-value">3,251.22</div>
+        <div class="kpi-delta pos" id="kpi-cop">12m -19.82% • YTD -11.85% — más apreciada</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Brasil BRL</div>
+        <div class="kpi-value">5.11</div>
+        <div class="kpi-delta pos">12m -7.55% • 2024: -27% → 2025: +10%</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">México MXN</div>
+        <div class="kpi-value">17.47</div>
+        <div class="kpi-delta pos">12m -6.57% • 2023: +11% → 2024: -21%</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Perú PEN <small>S/ por USD</small></div>
+        <div class="kpi-value">3.40</div>
+        <div class="kpi-delta">Más estable: rango 3.37-3.98 en 4 años</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <strong>Conclusión rápida:</strong> Sí, el titular CNN Chile (-1,4% YTD al 25 ago) es una <em>foto de 8 meses</em>. En 55 meses todas muestran reversiones bruscas. El MSCI EM Currency está en máximo histórico 1.919 pts (+0,76% YTD), pero a 3 años solo +3,27% anualizado. El rally actual es coyuntural: carry trade + dólar débil.
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2>Índice comparativo (Base 100 = Ene 2022)</h2>
+        <p class="card-desc">Normalizado para comparar performance. &lt;100 = apreciación vs USD, &gt;100 = depreciación. Pasa el mouse, haz clic en la leyenda para filtrar, usa el brush inferior para zoom.</p>
+      </div>
+      <div class="controls">
+        <div class="legend" id="legend"></div>
+        <div class="toggles">
+          <button class="btn btn-sm active" data-mode="indexed">Índice 100</button>
+          <button class="btn btn-sm" data-mode="absolute">Valores absolutos</button>
+          <button class="btn btn-sm" data-mode="log">Escala log</button>
+        </div>
+      </div>
+    </div>
+    <div id="chart" class="chart"></div>
+    <div id="brush" class="brush"></div>
+    <div class="chart-footer">
+      <span>↑ Depreciación (más pesos por dólar)</span>
+      <span>↓ Apreciación (menos pesos por dólar)</span>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h3>Variación por ventanas (%)</h3>
+      <p class="card-desc">Positivo = se deprecia, Negativo = se aprecia. Calculado sobre promedio mensual BCRP.</p>
+      <div id="varTable" class="var-table"></div>
+    </div>
+    <div class="card">
+      <h3>Peaks & valles (absoluto)</h3>
+      <div id="extremes" class="extremes"></div>
+      <div class="msci-box">
+        <h4>MSCI EM Currency Index</h4>
+        <ul>
+          <li><strong>1.919,39</strong> máximo 21 ago 2026 (serie desde 2015)</li>
+          <li>52 semanas: 1.828 - 1.919</li>
+          <li>YTD al 19 jun: +0,76% • 1 año +1,95% • 3a +3,27% ann.</li>
+          <li>Jul 2023 YTD: +1,3% — rally es muy reciente</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h2>Serie mensual completa</h2>
+        <p class="card-desc">55 meses • Ene 2022 - Jul 2026 • Promedio del período (UM por US$). Fuente: BCRP PN01227XM, PN01229XM, PN01230XM, PN01225XM, PN01210PM. Busca, ordena y exporta.</p>
+      </div>
+      <div class="table-controls">
+        <input id="search" type="search" placeholder="Filtrar por fecha (ej: 2024, Ene, Jul)..." />
+        <select id="sortBy">
+          <option value="date-desc">Más reciente primero</option>
+          <option value="date-asc">Más antiguo primero</option>
+          <option value="clp-desc">CLP mayor → menor</option>
+          <option value="cop-desc">COP mayor → menor</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Periodo</th>
+            <th>CLP <small>$/USD</small></th>
+            <th>COP <small>$/USD</small></th>
+            <th>MXN <small>$/USD</small></th>
+            <th>BRL <small>R$/USD</small></th>
+            <th>PEN <small>S//USD</small></th>
+            <th>Var CLP m/m</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card methodology">
+    <h3>Metodología y notas</h3>
+    <ul>
+      <li><strong>Datos:</strong> BCRPData - Tipo de cambio de las principales monedas - promedio del período (UM por US$) y S/ por US$ bancario promedio. Fuentes originales FMI/Reuters.</li>
+      <li><strong>MSCI:</strong> MSCI EM Currency Index (MIEM00000CUS) - mide 25 monedas emergentes vs USD, incluye carry. Máximo 1.919,39 el 21/08/26 según CNBC/Investing.</li>
+      <li><strong>CNN Chile:</strong> titular del 25/08/26: CLP -1,4% YTD (dato diario Trading Economics/XTB), COP +21,1%, BRL +6,3%, MXN +6,1%, PEN +0,6%. Difiere levemente del promedio mensual BCRP por corte intradía.</li>
+      <li><strong>Interpretación:</strong> tabla mensual suaviza volatilidad diaria. Para trading usar USD/CLP observado diario del Banco Central de Chile.</li>
+      <li>Repositorio y CSV: <a href="#" id="repoLink">GitHub Pages</a> • actualización mensual automática propuesta.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <p>Hecho con D3.js • Datos abiertos BCRP • No es recomendación de inversión • Autor: kiltro-dev • Aug 2026</p>
+    <p><a href="https://github.com/kiltro-dev">github.com/kiltro-dev</a> • Deploy vía GitHub Actions + Pages</p>
+  </div>
+</footer>
+
+<div id="tooltip" class="tooltip" style="display:none"></div>
+<script src="app.js"></script>
+</body>
+</html>
