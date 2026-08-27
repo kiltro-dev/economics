@@ -311,14 +311,14 @@ function highlightLine(k){
   const info=document.getElementById("selectionInfo");
   if(k){
     const col=rawByCountry[k].color;
-    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Hover: <strong style="color:var(--ink)">${rawByCountry[k].name}</strong> · Click para fijar · Shift+click multi</span>`;
+    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Hover: <strong style="color:var(--ink)">${rawByCountry[k].name}</strong> · Click para agregar/quitar</span>`;
   } else if(typeof isolatedKey!=="undefined" && isolatedKey){
     const col=rawByCountry[isolatedKey].color;
-    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Fijado: <strong style="color:var(--ink)">${rawByCountry[isolatedKey].name}</strong> · Click de nuevo para soltar</span>`;
+    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Seleccionado: <strong style="color:var(--ink)">${rawByCountry[isolatedKey].name}</strong> · Click para quitar · Doble click aísla</span>`;
   } else if(info){
     const n=active.size;
-    if(n===7) info.textContent="Todos activos · Click para aislar un país · Shift+click para comparar 2-3";
-    else info.textContent=`Seleccionados: ${Array.from(active).map(k=>rawByCountry[k].name).join(", ")} (${n}) · Doble click para reset`;
+    if(n===7) info.textContent="Todos activos · Click en leyenda para agregar/quitar · Doble click aísla uno";
+    else info.textContent=`Seleccionados (${n}): ${Array.from(active).map(k=>rawByCountry[k].name).join(", ")} · Click quita/agrega · Doble click aísla`;
   }
   // original logic below
 
@@ -344,21 +344,43 @@ order.forEach(k=>{
       .on("focus", ()=> highlightLine(k)).on("blur", ()=> highlightLine(isolatedKey||null))
       .on("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault(); item.dispatch("click");} if(e.key==="Escape"){isolatedKey=null; active=new Set(order); legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false); highlightLine(null); renderAll(); }});
   item.on("click", (e)=>{
-    if(e.shiftKey){
-      if(active.has(k)){ if(active.size>1){active.delete(k); item.classed("off",true);}} else{active.add(k); item.classed("off",false);}
-      isolatedKey=null; legendDiv.selectAll(".legend-item").classed("is-isolated",false);
-    } else {
-      if(isolatedKey===k){
-        isolatedKey=null; active=new Set(order);
+    // Click toggles that country (intuitivo: click para agregar/quitar)
+    if(active.has(k)){
+      if(active.size===1){
+        // si es el único activo, segundo click resetea a todos
+        active=new Set(order);
         legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false);
+        isolatedKey=null;
       } else {
-        isolatedKey=k; active=new Set([k]);
-        legendDiv.selectAll(".legend-item").classed("off",function(){return this.dataset.k!==k;}).classed("is-isolated",function(){return this.dataset.k===k;});
+        active.delete(k);
+        isolatedKey=null;
       }
+    } else {
+      active.add(k);
+      isolatedKey=null;
     }
-    renderAll(); if(isolatedKey) setTimeout(()=>highlightLine(isolatedKey),50);
+    // si queda 1 solo, marcarlo como aislado visualmente
+    if(active.size===1){
+      const sole=[...active][0];
+      isolatedKey=sole;
+      legendDiv.selectAll(".legend-item").classed("is-isolated",function(){return this.dataset.k===sole;});
+    } else {
+      legendDiv.selectAll(".legend-item").classed("is-isolated",false);
+    }
+    // sincroniza clase off con active
+    legendDiv.selectAll(".legend-item").each(function(){ const kk=this.dataset.k; d3.select(this).classed("off", !active.has(kk)); });
+    renderAll();
+    highlightLine(active.has(k)?k:null);
   });
-  item.on("dblclick", (e)=>{ e.preventDefault(); isolatedKey=null; active=new Set(order); legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false); highlightLine(null); renderAll(); });
+  item.on("dblclick", (e)=>{
+    e.preventDefault();
+    // Doble click aísla solo ese país
+    active=new Set([k]);
+    isolatedKey=k;
+    legendDiv.selectAll(".legend-item").classed("off",function(){return this.dataset.k!==k;}).classed("is-isolated",function(){return this.dataset.k===k;});
+    renderAll();
+    setTimeout(()=>highlightLine(k),50);
+  });
 });
 
 function renderKPIs(){
