@@ -1,32 +1,32 @@
 /* LatAm Growth Monitor — Restrained Economic Dark — FT/Bloomberg inspired */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,ital,wght@9..144,0,500;9..144,1,500&family=IBM+Plex+Mono:wght@400&family=Inter:wght@400;500;600&display=swap');
 :root{
-  --bg:#0A0F14;
-  --bg2:#10161F;
-  --paper:#141C27;
-  --paper2:#1B2636;
-  --line:#1E2F44;
-  --line2:#253A54;
-  --ink:#E8EDF2;
-  --ink2:#A9B8CC;
+  --bg:#0E141E;
+  --bg2:#151D29;
+  --paper:#1A2332;
+  --paper2:#1F2D42;
+  --line:#23344B;
+  --line2:#2C405C;
+  --grid:#1F2E44;
+  --ink:#E6EAF0;
+  --ink2:#B4C0D2;
   --muted:#7E8EA6;
-  --muted2:#5C6B84;
-  --accent:#B8A082;
-  --accent-2:#D1C2A8;
-  --accent-bg:rgba(184,160,130,0.07);
-  --accent-line:rgba(184,160,130,0.16);
-  --pos:#7EAD9B;
-  --neg:#C17C7E;
-  --grid:#1A2A3D;
-  --cl:#8AA7C8;
-  --co:#C1A466;
-  --br:#84B49E;
-  --mx:#C1846F;
-  --pe:#9D96C4;
-  --ar:#C49A6B;
-  --latam:#DDE3EB;
-  --radius:8px;
-  --radius-lg:10px;
+  --muted2:#5E6E86;
+  --accent:#8EA0B8;
+  --accent-2:#A8B8CD;
+  --accent-bg:rgba(142,160,184,0.08);
+  --accent-line:rgba(142,160,184,0.18);
+  --pos:#8FB3A5;
+  --neg:#C48B8D;
+  --cl:#7B9BBD;
+  --co:#BDA67D;
+  --br:#8EB0A6;
+  --mx:#B17A68;
+  --pe:#9A90BB;
+  --ar:#A9AB9E;
+  --latam:#8E97A8;
+  --radius:6px;
+  --radius-lg:8px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
@@ -56,15 +56,20 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .chip:hover{border-color:var(--muted);color:var(--ink);background:var(--paper2)}
 .chip.active{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
 /* Sticky filter dock — hero */
-.filter-dock{position:sticky;top:0;z-index:12;background:rgba(10,15,20,0.92);backdrop-filter:blur(10px) saturate(1.05);border:1px solid var(--line);border-radius:10px;margin-top:14px;padding:10px 12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 4px 16px rgba(0,0,0,0.25)}
-.filter-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.filter-row .toggles{display:flex;gap:6px}
-.scrubber-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.scrubber{flex:1;min-width:200px;height:42px;position:relative}
-.year-input{width:72px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-align:center;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:6px 0;color:var(--ink);font-variant-numeric:tabular-nums}
-.year-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg)}
-.scrubber-value{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:0.04em;white-space:nowrap}
-@media(max-width:700px){.scrubber{flex-basis:100%;order:3}}
+.filter-dock{display:none}
+.chart-toolbar{position:sticky;top:0;z-index:12;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--paper);border-bottom:1px solid var(--line);padding:8px 12px;margin:-14px -14px 10px -14px;border-radius:10px 10px 0 0}
+.toolbar-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.filter-label{font:400 10px 'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.year-select{font:500 13px 'IBM Plex Mono',monospace;background:var(--bg2);color:var(--ink);border:1px solid var(--line2);border-radius:6px;padding:5px 28px 5px 8px;appearance:auto}
+.year-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-bg)}
+.range-sep{color:var(--muted2);padding:0 2px}
+.segmented{display:inline-flex;border:1px solid var(--line2);border-radius:999px;overflow:hidden}
+.seg{padding:4px 10px;font-size:11px;font-weight:500;background:transparent;color:var(--muted);border:0;cursor:pointer}
+.seg.active{background:var(--ink);color:var(--bg)}
+.scrubber-row{display:none}
+.year-input{display:none}
+.scrubber{display:none}
+.scrubber-value{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:0.04em}
 /* KPIs — compact strip below chart */
 .kpi-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:12px}
 @media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(4,1fr)}}
@@ -124,10 +129,12 @@ table.data td:first-child{font-weight:600}
 table.data tbody tr:hover td{background:#131a24}
 .table-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .table-controls input, .table-controls select{background:var(--bg2);border:1px solid var(--line2);color:var(--ink);padding:7px 10px;border-radius:8px;font-size:13px}
-.methodology{background:#0c1016}
-.methodology h3{font-family:Fraunces, serif;font-size:16px;margin:0 0 8px;font-weight:500}
-.methodology ul{margin:0;padding-left:18px;color:var(--ink2);font-size:12.5px;line-height:1.65}
-.methodology li::marker{color:var(--accent)}
+.sources-details{margin-top:10px;text-align:left;max-width:780px;margin-left:auto;margin-right:auto}
+.sources-details summary{cursor:pointer;font-size:11px;color:var(--ink2);list-style:none;display:inline-flex;align-items:center;gap:6px}
+.sources-details summary::-webkit-details-marker{display:none}
+.sources-details summary::after{content:"▸";color:var(--muted);font-size:10px}
+.sources-details[open] summary::after{content:"▾"}
+.sources-details p{margin:8px 0 0;color:var(--muted);font-size:11px;line-height:1.6;text-align:left}
 .footer{padding:20px 0;color:var(--muted);font-size:11px;text-align:center;border-top:1px solid var(--line);margin-top:20px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.02em}
 .tooltip{position:absolute;background:#0E141E;border:1px solid #253A54;color:var(--ink);padding:9px 11px;border-radius:8px;font-size:11.5px;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,0.45);min-width:220px;z-index:20}
 .tooltip .tt-date{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent-2);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:6px}

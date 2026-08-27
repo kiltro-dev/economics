@@ -15,7 +15,7 @@
     <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-start">
       <div>
         <h1>LatAm Growth <em>Monitor</em> <span>2000 — 2026</span></h1>
-        <p class="subtitle"><strong>PIB real, var. anual %</strong> — De la década perdida al rebote post-covid y la trampa de 2.3%. <strong style="color:var(--gold2)">2000-2025 observado</strong> (WDI) + <strong>2026 proyección</strong> (WB GEP/IPM). Base 2000=100 para acumulado.</p>
+        <p class="subtitle">PIB real, var. anual %. 2000–2025 observado; 2026 proyección WB. Punteado = forecast.</p>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <a href="fx.html" class="badge" style="text-decoration:none">FX Dashboard →</a>
@@ -26,10 +26,17 @@
   </div>
 </header>
 
-<nav class="filter-dock container" id="filterDock" style="margin-top:14px">
-  <div class="filter-row">
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <span class="period-label">Periodo</span>
+<main class="container">
+  <section class="card card--hero">
+    <div class="chart-toolbar" id="filterDock">
+      <div class="toolbar-left">
+        <label class="filter-label" for="startYear">Desde</label>
+        <select id="startYear" class="year-select"></select>
+        <span class="range-sep">—</span>
+        <label class="filter-label" for="endYear">Hasta</label>
+        <select id="endYear" class="year-select"></select>
+        <span class="scrubber-value" id="scrubberLabel">2021 — 2026 · 6A</span>
+      </div>
       <div class="period-chips" id="periodChips">
         <button class="chip" data-range="2000-2026">2000-2026</button>
         <button class="chip" data-range="2010-2026">2010-2026</button>
@@ -37,27 +44,22 @@
         <button class="chip active" data-range="2021-2026">5A · 2021-26</button>
         <button class="chip" data-range="2015-2024">Década perdida</button>
       </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div class="segmented" id="metricToggle">
+          <button class="seg active" data-metric="gdp">PIB real</button>
+          <button class="seg" data-metric="pcap">Per cápita</button>
+        </div>
+        <div class="toggles">
+          <button class="btn btn-sm active" data-view="growth">Var. anual %</button>
+          <button class="btn btn-sm" data-view="cum">Acumulado</button>
+          <button class="btn btn-sm" data-view="avg">Promedio</button>
+        </div>
+      </div>
     </div>
-    <div class="toggles">
-      <button class="btn btn-sm active" data-view="growth">Var. anual %</button>
-      <button class="btn btn-sm" data-view="cum">Acumulado</button>
-      <button class="btn btn-sm" data-view="avg">Promedio</button>
-    </div>
-  </div>
-  <div class="scrubber-row">
-    <input type="number" id="startYear" min="2000" max="2025" value="2021" class="year-input" aria-label="Año inicio">
-    <div id="scrubber" class="scrubber"></div>
-    <input type="number" id="endYear" min="2001" max="2026" value="2026" class="year-input" aria-label="Año fin">
-    <span class="scrubber-value" id="scrubberLabel">2021 — 2026 · 6A</span>
-  </div>
-</nav>
-
-<main class="container">
-  <section class="card card--hero">
     <div class="card-header">
       <div>
         <h2 id="chartTitle">Crecimiento anual <em>— var. % PIB real</em></h2>
-        <p class="card-desc" id="chartDesc">Línea sólida 2000-2025 observado, punteada 2026 proyección. Hover para detalle, clic en leyenda para filtrar. Perú +8.5% promedio 2004-08, Argentina -10.9% 2002.</p>
+        <p class="card-desc" id="chartDesc">Sólida = observado; punteada = 2026 proyección. Hover detalle, clic leyenda filtra.</p>
       </div>
       <div class="controls">
         <div class="legend" id="legend"></div>
@@ -121,23 +123,15 @@
     </div>
   </section>
 
-  <section class="card methodology">
-    <h3>Metodología — estilo económico profesional</h3>
-    <ul>
-      <li><strong>Fuente principal 2000-2025:</strong> Banco Mundial WDI <code>NY.GDP.MKTP.KD.ZG</code> (PIB real, var. anual %), última actualización <strong>2026-07-13</strong>, precios de mercado, año calendario. Códigos: CL, CO, BR, MX, PE, AR, ZJ (LatAm & Caribbean).</li>
-      <li><strong>2026 proyección:</strong> Banco Mundial GEP Jun-2025 (Chile 2.2, Colombia 2.7, Brasil 2.2, México 1.1, Perú 2.5, Argentina 4.5, LAC 2.4) — punteado en gráficos. 2025 en WDI ya es estimado observado (no forecast).</li>
-      <li><strong>Ajuste Chile:</strong> WDI coincide con BCCh Anuario 2024 (Chile 2021 11.34 vs BCCh 11.7, 2022 2.06 vs 2.2, 2023 0.68 vs 0.5, 2024 2.81 vs 2.6) — diferencias <0.3pp por revisión CdeR2018. Se usa WDI para comparabilidad regional.</li>
-      <li><strong>Contraste:</strong> CEPAL Balance 2025 (Ago-2025) LAC 2.4/2.3 (2025/26), IMF WEO Abr-2026 LAC 2.4/2.3/2.7 — rango ±0.3pp.</li>
-      <li><strong>Cálculos:</strong> CAGR = (Índice_fin/Índice_ini)^(1/años)-1. Acumulado = Π(1+g). Promedio periodo = media aritmética anual en rango seleccionado.</li>
-      <li><strong>Uso:</strong> selector 2000-2026 permite ver década completa, década perdida 2015-24 (LAC solo +1.0% promedio), o rebote 2021-26. Brush para zoom fino. Exporta CSV filtrado.</li>
-      <li>Diseño: dark economic (Fraunces + IBM Plex Mono + Inter), inspirado en FT/Bloomberg — <a href="fx.html">FX Dashboard sigue disponible aquí</a>.</li>
-    </ul>
-  </section>
 </main>
 
 <footer class="footer">
   <div class="container">
-    <p>© 2026 LatAm Growth Monitor — Datos abiertos WB/BCCh/CEPAL/IMF • Visualización D3.js • No es pronóstico propio • kiltro-dev • Último dato WDI: 2026-07-13</p>
+    <p>© 2026 LatAm Growth Monitor · WB WDI 2026-07-13 (NY.GDP.MKTP.KD.ZG) · WB GEP jun-2025 · BCCh · CEPAL · IMF WEO · D3.js</p>
+    <details class="sources-details">
+      <summary>Fuentes y metodología</summary>
+      <p>WDI 2000–2025 precios mercado, año calendario (CL, CO, BR, MX, PE, AR, ZJ = LAC). 2026f: WB GEP jun-2025 (CL 2,2; CO 2,7; BR 2,2; MX 1,1; PE 2,5; AR 4,5; LAC 2,4). WDI ≈ BCCh Anuario 2024 (&lt;0,3 pp, CdeR2018). Contraste: CEPAL Balance 2025 / IMF WEO abr-2026 LAC 2,3–2,4%. Cálculos: acumulado Π(1+g), CAGR = (índice/100)^{1/n}−1, promedio = media aritmética. Índice base inicio-1=100. 2025 en WDI ya es estimado observado. Per cápita: WB NY.GDP.PCAP.KD.ZG.</p>
+    </details>
   </div>
 </footer>
 
@@ -145,26 +139,49 @@
 <script>
 // ===== DATA 2000-2026 WDI + 2026 forecast =====
 const rawByCountry = {
-  "CL": {name:"Chile", color:"#8AA7C8", vals:{
+  "CL": {name:"Chile", color:"#7B9BBD", vals:{
     2000:4.97,2001:3.15,2002:3.20,2003:4.72,2004:6.67,2005:5.84,2006:6.05,2007:5.17,2008:3.79,2009:-1.12,2010:5.85,2011:6.22,2012:6.16,2013:3.31,2014:1.79,2015:2.15,2016:1.75,2017:1.36,2018:3.99,2019:0.64,2020:-6.14,2021:11.34,2022:2.06,2023:0.68,2024:2.81,2025:2.46,2026:2.2
   }},
-  "CO": {name:"Colombia", color:"#C1A466", vals:{
+  "CO": {name:"Colombia", color:"#BDA67D", vals:{
     2000:2.92,2001:1.68,2002:2.50,2003:3.92,2004:5.33,2005:4.83,2006:6.72,2007:6.74,2008:3.28,2009:1.14,2010:4.49,2011:6.95,2012:3.91,2013:5.13,2014:4.50,2015:2.96,2016:2.09,2017:1.36,2018:2.56,2019:3.19,2020:-7.19,2021:10.80,2022:7.33,2023:0.84,2024:1.49,2025:2.64,2026:2.7
   }},
-  "BR": {name:"Brasil", color:"#84B49E", vals:{
+  "BR": {name:"Brasil", color:"#8EB0A6", vals:{
     2000:4.39,2001:1.39,2002:3.05,2003:1.14,2004:5.76,2005:3.20,2006:3.96,2007:6.07,2008:5.09,2009:-0.13,2010:7.53,2011:3.97,2012:1.92,2013:3.00,2014:0.50,2015:-3.55,2016:-3.28,2017:1.32,2018:1.78,2019:1.22,2020:-3.28,2021:4.76,2022:3.02,2023:3.24,2024:3.42,2025:2.29,2026:2.2
   }},
-  "MX": {name:"México", color:"#C1846F", vals:{
+  "MX": {name:"México", color:"#B17A68", vals:{
     2000:5.03,2001:-0.45,2002:-0.24,2003:1.19,2004:3.57,2005:2.11,2006:4.81,2007:2.08,2008:0.94,2009:-6.30,2010:4.97,2011:3.44,2012:3.55,2013:0.85,2014:2.50,2015:2.70,2016:1.77,2017:1.87,2018:1.97,2019:-0.39,2020:-8.35,2021:6.05,2022:3.71,2023:3.11,2024:1.35,2025:0.56,2026:1.1
   }},
-  "PE": {name:"Perú", color:"#9D96C4", vals:{
+  "PE": {name:"Perú", color:"#9A90BB", vals:{
     2000:2.69,2001:0.62,2002:5.45,2003:4.17,2004:4.96,2005:6.29,2006:7.53,2007:8.52,2008:9.13,2009:1.10,2010:8.33,2011:6.33,2012:6.14,2013:5.85,2014:2.38,2015:3.25,2016:3.95,2017:2.52,2018:3.97,2019:2.24,2020:-10.93,2021:13.42,2022:2.82,2023:-0.35,2024:3.52,2025:3.43,2026:2.5
   }},
-  "AR": {name:"Argentina", color:"#C49A6B", vals:{
+  "AR": {name:"Argentina", color:"#A9AB9E", vals:{
     2000:-0.79,2001:-4.41,2002:-10.89,2003:8.84,2004:9.03,2005:8.85,2006:8.05,2007:9.01,2008:4.06,2009:-5.92,2010:10.13,2011:6.00,2012:-1.03,2013:2.41,2014:-2.51,2015:2.73,2016:-2.08,2017:2.82,2018:-2.62,2019:-2.00,2020:-9.90,2021:10.44,2022:6.02,2023:-1.86,2024:-1.34,2025:4.37,2026:4.5
   }},
-  "ZJ": {name:"LatAm", color:"#DDE3EB", vals:{
+  "ZJ": {name:"LatAm", color:"#8E97A8", vals:{
     2000:3.62,2001:0.53,2002:0.22,2003:2.21,2004:5.72,2005:4.09,2006:5.26,2007:5.29,2008:3.69,2009:-2.30,2010:6.15,2011:4.40,2012:2.65,2013:2.72,2014:1.20,2015:0.24,2016:-0.73,2017:1.55,2018:1.22,2019:0.32,2020:-6.86,2021:7.08,2022:4.09,2023:2.21,2024:2.25,2025:2.32,2026:2.4
+  }},
+};
+const pcapByCountry = {
+  "CL": {name:"Chile", color:"#7B9BBD", vals:{
+    2000:4.05,2001:2.28,2002:2.22,2003:3.78,2004:5.71,2005:4.86,2006:5.06,2007:4.20,2008:2.89,2009:-1.94,2010:4.96,2011:5.29,2012:5.24,2013:2.47,2014:1.02,2015:1.35,2016:0.95,2017:0.21,2018:2.77,2019:-0.35,2020:-6.89,2021:11.04,2022:1.52,2023:0.19,2024:2.25,2025:1.97,2026:1.4
+  }},
+  "CO": {name:"Colombia", color:"#BDA67D", vals:{
+    2000:1.35,2001:0.15,2002:0.99,2003:2.45,2004:3.87,2005:3.42,2006:5.32,2007:5.37,2008:2.03,2009:0.02,2010:3.40,2011:5.83,2012:2.86,2013:4.10,2014:3.53,2015:2.05,2016:1.22,2017:0.53,2018:1.42,2019:2.00,2020:-8.05,2021:9.61,2022:6.10,2023:-0.15,2024:0.41,2025:1.61,2026:1.8
+  }},
+  "BR": {name:"Brasil", color:"#8EB0A6", vals:{
+    2000:2.96,2001:0.08,2002:1.76,2003:-0.07,2004:4.50,2005:1.99,2006:2.78,2007:4.88,2008:3.92,2009:-1.17,2010:6.39,2011:2.91,2012:0.96,2013:2.10,2014:-0.31,2015:-4.26,2016:-3.99,2017:0.59,2018:1.09,2019:0.56,2020:-3.84,2021:4.32,2022:2.65,2023:2.83,2024:3.00,2025:1.89,2026:1.6
+  }},
+  "MX": {name:"México", color:"#B17A68", vals:{
+    2000:3.52,2001:-1.76,2002:-1.45,2003:-0.03,2004:2.37,2005:0.96,2006:3.63,2007:0.95,2008:-0.15,2009:-7.26,2010:3.89,2011:2.39,2012:2.49,2013:-0.17,2014:1.47,2015:1.67,2016:0.75,2017:0.85,2018:0.94,2019:-1.34,2020:-9.18,2021:5.18,2022:2.81,2023:2.20,2024:0.48,2025:-0.27,2026:0.2
+  }},
+  "PE": {name:"Perú", color:"#9A90BB", vals:{
+    2000:1.34,2001:-0.68,2002:4.10,2003:2.87,2004:3.69,2005:5.01,2006:6.27,2007:7.29,2008:7.90,2009:0.03,2010:7.16,2011:5.18,2012:5.02,2013:4.72,2014:1.30,2015:2.13,2016:2.79,2017:1.39,2018:2.81,2019:1.10,2020:-11.78,2021:12.18,2022:1.71,2023:-1.38,2024:2.39,2025:2.36,2026:1.5
+  }},
+  "AR": {name:"Argentina", color:"#A9AB9E", vals:{
+    2000:-1.91,2001:-5.45,2002:-11.84,2003:7.72,2004:7.93,2005:7.74,2006:6.94,2007:7.93,2008:3.01,2009:-6.91,2010:8.97,2011:4.88,2012:-2.04,2013:1.39,2014:-3.51,2015:1.66,2016:-3.02,2017:1.92,2018:-3.42,2019:-2.70,2020:-10.34,2021:10.15,2022:5.80,2023:-2.14,2024:-1.68,2025:4.01,2026:3.7
+  }},
+  "ZJ": {name:"LatAm", color:"#8E97A8", vals:{
+    2000:2.18,2001:-0.78,2002:-1.02,2003:0.98,2004:4.45,2005:2.85,2006:4.04,2007:4.09,2008:2.52,2009:-3.35,2010:5.01,2011:3.32,2012:1.62,2013:1.71,2014:0.24,2015:-0.71,2016:-1.63,2017:0.68,2018:0.37,2019:-0.53,2020:-7.61,2021:6.23,2022:3.31,2023:1.50,2024:1.55,2025:1.65,2026:1.6
   }},
 };
 const order = ["CL","CO","BR","MX","PE","AR","ZJ"];
@@ -178,19 +195,19 @@ function getDataInRange(){
   const years=getFilteredYears();
   return years.map(y=>{
     const row={year:y};
-    order.forEach(k=> row[k]=rawByCountry[k].vals[y]);
+    const ds = (typeof getDataset==='function'? getDataset(): rawByCountry); order.forEach(k=> row[k]=ds[k].vals[y]);
     row.isForecast = (y===2026);
     return row;
   });
 }
 function computeCumulative(start,end){
-  // start inclusive, compute index start-1=100
+  const ds = (typeof getDataset==='function'? getDataset(): rawByCountry);
   const countries={};
   order.forEach(k=>{
     let idx=100;
     const cum={};
     for(let y=start; y<=end; y++){
-      const g=rawByCountry[k].vals[y];
+      const g=ds[k].vals[y];
       if(g!=null) idx = idx*(1+g/100);
       cum[y]=idx;
     }
@@ -201,12 +218,14 @@ function computeCumulative(start,end){
 function computeStats(start,end){
   const years = end-start+1;
   const stats={};
+  const dsStats = (typeof getDataset==='function'? getDataset(): rawByCountry);
   order.forEach(k=>{
-    const vals = d3.range(start,end+1).map(y=> rawByCountry[k].vals[y]).filter(v=>v!=null);
+    const vals = d3.range(start,end+1).map(y=> dsStats[k].vals[y]).filter(v=>v!=null);
     const avg = d3.mean(vals);
     // cumulative total growth from start to end: (cumEnd / 100 -1)*100 where cum start-1=100
     let idx=100;
-    for(let y=start;y<=end;y++) idx*=(1+rawByCountry[k].vals[y]/100);
+    const ds2 = (typeof getDataset==='function'? getDataset(): rawByCountry);
+    for(let y=start;y<=end;y++) idx*=(1+ds2[k].vals[y]/100);
     const total = idx-100;
     const cagr = (Math.pow(idx/100, 1/years)-1)*100;
     const min = d3.min(vals), max=d3.max(vals);
@@ -228,6 +247,12 @@ document.querySelectorAll("#periodChips .chip").forEach(btn=>{
 const startInput=document.getElementById("startYear");
 const endInput=document.getElementById("endYear");
 const scrubberLabel=document.getElementById("scrubberLabel");
+function populateYearSelects(){
+  if(startInput.tagName==="SELECT" && startInput.options.length===0){
+    for(let y=2000;y<=2026;y++){ startInput.append(new Option(y,y)); endInput.append(new Option(y,y)); }
+  }
+}
+populateYearSelects();
 function syncInputs(){
   startInput.value=startYear; endInput.value=endYear;
   if(scrubberLabel) scrubberLabel.textContent = `${startYear} — ${endYear} · ${endYear-startYear+1}A`;
@@ -238,11 +263,11 @@ function syncInputs(){
     if(scrubberLabel) scrubberLabel.textContent = `${startYear} — ${endYear} · ${endYear-startYear+1}A`;
   }
 }
-startInput.addEventListener("input", ()=>{ startYear=+startInput.value; syncInputs(); // update chips active none
+startInput.addEventListener("change", ()=>{ startYear=+startInput.value; syncInputs();
   document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
   renderAll();
 });
-endInput.addEventListener("input", ()=>{ endYear=+endInput.value; syncInputs();
+endInput.addEventListener("change", ()=>{ endYear=+endInput.value; syncInputs();
   document.querySelectorAll("#periodChips .chip").forEach(b=>b.classList.remove("active"));
   renderAll();
 });
@@ -254,6 +279,19 @@ document.querySelectorAll("[data-view]").forEach(b=>{
     renderAll();
   });
 });
+let metric="gdp";
+function getDataset(){ return metric==="gdp" ? rawByCountry : pcapByCountry; }
+document.querySelectorAll("[data-metric]").forEach(b=>{
+  b.addEventListener("click", ()=>{
+    document.querySelectorAll("[data-metric]").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    metric=b.dataset.metric;
+    // update subtitle
+    const sub=document.querySelector(".subtitle");
+    if(sub) sub.textContent = metric==="gdp" ? "PIB real, var. anual %. 2000–2025 observado; 2026 proyección WB. Punteado = forecast." : "PIB per cápita, var. anual %. 2000–2025 observado; 2026 estimado. Punteado = forecast.";
+    renderAll();
+  });
+});
 
 // legend
 const legendDiv=d3.select("#legend");
@@ -261,7 +299,7 @@ order.forEach(k=>{
   const c=rawByCountry[k];
   const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k);
   const isLatam=k==="ZJ";
-  item.style("border-color", isLatam?"#ffffff":null);
+  item.style("border-color", isLatam?"#8E97A8":null);
   item.html(`<span class="dot" style="background:${c.color}"></span> ${c.name}`);
   item.on("click", ()=>{
     if(active.has(k)){
@@ -297,7 +335,7 @@ function renderKPIs(){
   const diff = chile.avg - lac.avg;
   const box=document.getElementById("insightBox");
   let msg="";
-  if(startYear===2000 && endYear===2026) msg=`En <strong>2000-2026 (26 años)</strong> Chile promedia <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Acumulado: Chile +${chile.total.toFixed(1)}% (índice 100→${(100+chile.total).toFixed(0)}), LatAm +${lac.total.toFixed(1)}%. La década perdida 2015-2024 Chile 1.84% vs LatAm 1.02% — estancamiento del PIB per cápita.`;
+  if(startYear===2000 && endYear===2026) msg=`En <strong>2000-2026 (26 años)</strong> Chile promedia <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Acumulado: Chile +${chile.total.toFixed(1)}% (índice 100→${(100+chile.total).toFixed(0)}), LatAm +${lac.total.toFixed(1)}%. La década perdida 2015-2024 Chile 2.06% vs LatAm 1.14% — estancamiento.`;
   else if(startYear===2021) msg=`En <strong>2021-2026</strong> (rebote + normalización) Chile <strong>${chile.avg.toFixed(2)}%</strong> vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). Total: Chile +${chile.total.toFixed(1)}%, LatAm +${lac.total.toFixed(1)}%. 2026 es proyección punteada.`;
   else msg=`Periodo <strong>${startYear}-${endYear} (${endYear-startYear+1} años)</strong>: Chile <strong>${chile.avg.toFixed(2)}%</strong> promedio vs LatAm <strong>${lac.avg.toFixed(2)}%</strong> (${diff>0?"+":""}${diff.toFixed(2)}pp). CAGR Chile ${chile.cagr.toFixed(2)}% vs LatAm ${lac.cagr.toFixed(2)}%.`;
   box.innerHTML=msg + ` <span style="color:var(--muted)">• 2026 punteado = forecast WB.</span>`;
@@ -341,12 +379,14 @@ function renderMainChart(){
   g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(8).tickFormat(d=> d + (view==="growth"||view==="avg"?"%":"")));
   if(view==="growth"||view==="avg") g.append("line").attr("x1",0).attr("x2",w).attr("y1",y(0)).attr("y2",y(0)).attr("stroke","#243347").attr("stroke-dasharray","4 4").attr("opacity",0.9);
   // title update
-  document.getElementById("chartTitle").innerHTML = view==="cum" ? `Índice acumulado <em>— base ${startYear-1}=100</em>` : view==="avg" ? `Crecimiento + promedio del periodo` : `Crecimiento anual <em>— var. % PIB real</em>`;
+  const metricLabel = (typeof metric!=="undefined" && metric==="pcap") ? "PIB per cápita" : "PIB real";
+  document.getElementById("chartTitle").innerHTML = view==="cum" ? `Índice acumulado <em>— base ${startYear-1}=100 · ${metricLabel}</em>` : view==="avg" ? `Crecimiento + promedio · ${metricLabel}` : `Crecimiento anual <em>— var. % ${metricLabel}</em>`;
   // draw lines
   order.forEach(k=>{
     if(!active.has(k)) return;
     const c=rawByCountry[k];
-    const data=years.map(y=> ({y, v: c.vals[y], cum: computeCumulative(startYear,endYear)[k][y], isF: y===2026}));
+    const dsMain = (typeof getDataset==='function'? getDataset(): rawByCountry);
+    const data=years.map(y=> ({y, v: dsMain[k].vals[y], cum: computeCumulative(startYear,endYear)[k][y], isF: y===2026}));
     const yVal = d=> view==="cum" ? d.cum : d.v;
     // split solid vs forecast
     const solid=data.filter(d=> !d.isF && d.v!=null);
@@ -387,7 +427,8 @@ function renderMainChart(){
     order.forEach(k=>{
       if(!active.has(k)) return;
       const c=rawByCountry[k];
-      const v=c.vals[clamped];
+      const dsTT = (typeof getDataset==='function'? getDataset(): rawByCountry);
+      const v=dsTT[k].vals[clamped];
       if(v==null) return;
       const cum=computeCumulative(startYear,endYear)[k][clamped];
       const valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
@@ -435,8 +476,8 @@ function renderBarChart(){
   });
   // LatAm avg line
   const lacAvg=stats["ZJ"].avg;
-  g.append("line").attr("x1", x(lacAvg)).attr("x2", x(lacAvg)).attr("y1",0).attr("y2",h).attr("stroke","#ffffff").attr("stroke-width",1.4).attr("stroke-dasharray","6 4").attr("opacity",0.9);
-  g.append("text").attr("x", x(lacAvg)).attr("y", -6).attr("text-anchor","middle").attr("fill","#ffffff").attr("font-size","10px").attr("font-family","IBM Plex Mono").text(`LatAm ${lacAvg.toFixed(2)}%`);
+  g.append("line").attr("x1", x(lacAvg)).attr("x2", x(lacAvg)).attr("y1",0).attr("y2",h).attr("stroke","#8E97A8").attr("stroke-width",1.4).attr("stroke-dasharray","6 4").attr("opacity",0.9);
+  g.append("text").attr("x", x(lacAvg)).attr("y", -6).attr("text-anchor","middle").attr("fill","#8E97A8").attr("font-size","10px").attr("font-family","IBM Plex Mono").text(`LatAm ${lacAvg.toFixed(2)}%`);
 }
 
 function renderCumChart(){
@@ -564,9 +605,9 @@ document.getElementById("exportCSV").addEventListener("click", ()=>{
       return v==null?"":v.toFixed(2);
     }).join(",")+"\n";
   });
-  const blob=new Blob([csv],{type:"text/csv"});
+  const metricSuffix = (typeof metric!=="undefined" && metric==="pcap") ? "_pcap" : "";
   const url=URL.createObjectURL(blob);
-  const a=document.createElement("a"); a.href=url; a.download=`latam_growth_${startYear}-${endYear}.csv`; a.click(); URL.revokeObjectURL(url);
+  const a=document.createElement("a"); a.href=url; a.download=`latam_growth${metricSuffix}_${startYear}-${endYear}.csv`; a.click(); URL.revokeObjectURL(url);
 });
 
 window.addEventListener("resize", renderAll);
