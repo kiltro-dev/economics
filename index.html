@@ -303,20 +303,46 @@ document.querySelectorAll("[data-metric]").forEach(b=>{
 });
 
 // legend
+let isolatedKey=null;
+let hoveredKey=null;
+function highlightLine(k){
+  hoveredKey=k;
+  d3.selectAll("#mainChart .line-base").classed("line-dim", false).classed("line-focus", false);
+  d3.selectAll("#mainChart .dot").classed("dot-dim", false).classed("dot-focus", false);
+  if(!k) return;
+  d3.selectAll("#mainChart .line-base").classed("line-dim", function(){return this.dataset.k!==k;});
+  d3.selectAll(`#mainChart .line-${k}`).classed("line-dim",false).classed("line-focus",true).raise();
+  d3.selectAll("#mainChart .dot").classed("dot-dim", function(){return this.dataset.k!==k;});
+  d3.selectAll(`#mainChart .dot-${k}`).classed("dot-dim",false).classed("dot-focus",true).raise();
+}
 const legendDiv=d3.select("#legend");
 order.forEach(k=>{
-  const c=rawByCountry[k];
-  const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k);
+  const c=getDataset()[k] || rawByCountry[k];
+  const col = rawByCountry[k].color;
+  const item=legendDiv.append("div").attr("class","legend-item").attr("data-k",k).attr("tabindex","0").attr("role","button").attr("aria-pressed","true").attr("aria-label",c.name);
   const isLatam=k==="ZJ";
-  item.style("border-color", isLatam?"#98A7C1":null);
-  item.html(`<span class="dot" style="background:${c.color}"></span> ${c.name}`);
-  item.on("click", ()=>{
-    if(active.has(k)){
-      if(active.size===1) return;
-      active.delete(k); item.classed("off", true);
-    } else { active.add(k); item.classed("off", false);}
-    renderAll();
+  item.style("border-color", isLatam?"#8E97A8":null);
+  item.html(`<span class="dot" style="background:${col}"></span> ${c.name}`);
+  item.on("mouseenter", ()=>{ item.classed("is-hover",true); highlightLine(k); })
+      .on("mouseleave", ()=>{ item.classed("is-hover",false); if(!isolatedKey) highlightLine(null); else highlightLine(isolatedKey); })
+      .on("focus", ()=> highlightLine(k)).on("blur", ()=> highlightLine(isolatedKey||null))
+      .on("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault(); item.dispatch("click");} if(e.key==="Escape"){isolatedKey=null; active=new Set(order); legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false); highlightLine(null); renderAll(); }});
+  item.on("click", (e)=>{
+    if(e.shiftKey){
+      if(active.has(k)){ if(active.size>1){active.delete(k); item.classed("off",true);}} else{active.add(k); item.classed("off",false);}
+      isolatedKey=null; legendDiv.selectAll(".legend-item").classed("is-isolated",false);
+    } else {
+      if(isolatedKey===k){
+        isolatedKey=null; active=new Set(order);
+        legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false);
+      } else {
+        isolatedKey=k; active=new Set([k]);
+        legendDiv.selectAll(".legend-item").classed("off",function(){return this.dataset.k!==k;}).classed("is-isolated",function(){return this.dataset.k===k;});
+      }
+    }
+    renderAll(); if(isolatedKey) setTimeout(()=>highlightLine(isolatedKey),50);
   });
+  item.on("dblclick", (e)=>{ e.preventDefault(); isolatedKey=null; active=new Set(order); legendDiv.selectAll(".legend-item").classed("off",false).classed("is-isolated",false); highlightLine(null); renderAll(); });
 });
 
 function renderKPIs(){
@@ -414,7 +440,7 @@ function renderMainChart(){
     const lineF=d3.line().defined(d=> yVal(d)!=null).x(d=>xMain(d.y)).y(d=>y(yVal(d))).curve(d3.curveMonotoneX);
     // halo for contrast on dark
     g.append("path").datum(solid).attr("fill","none").attr("stroke","#0E141E").attr("stroke-width", k==="ZJ"?5.2:4.4).attr("opacity",0.45).attr("d", lineSolid).attr("stroke-linecap","round").attr("stroke-linejoin","round");
-    g.append("path").datum(solid).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.8:2.15).attr("d", lineSolid).attr("opacity", k==="ZJ"?1:0.95).attr("stroke-linecap","round").attr("stroke-linejoin","round");
+    g.append("path").datum(solid).attr("class",`line-base line-${k}`).attr("data-k",k).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.8:2.15).attr("d", lineSolid).attr("opacity", k==="ZJ"?1:0.95).attr("stroke-linecap","round").attr("stroke-linejoin","round");
     // forecast last segment dashed (2025->2026)
     if(data.some(d=>d.isF)){
       const lastTwo=data.slice(-2);
@@ -422,11 +448,11 @@ function renderMainChart(){
       g.append("path").datum(lastTwo).attr("fill","none").attr("stroke",c.color).attr("stroke-width", k==="ZJ"?2.8:2.15).attr("stroke-dasharray","6 4").attr("opacity",0.9).attr("d", lineF);
       // dot forecast
       const last=lastTwo[1];
-      g.append("circle").attr("cx", xMain(last.y)).attr("cy", y(yVal(last))).attr("r",3.5).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1.2);
+      g.append("circle").attr("class",`dot dot-${k}`).attr("data-k",k).attr("cx", xMain(last.y)).attr("cy", y(yVal(last))).attr("r",3.5).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1.2);
     }
     // dots for solid points
     solid.forEach(d=>{
-      g.append("circle").attr("cx", xMain(d.y)).attr("cy", y(yVal(d))).attr("r",2.8).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1).attr("opacity",0.95);
+      g.append("circle").attr("class",`dot dot-${k}`).attr("data-k",k).attr("cx", xMain(d.y)).attr("cy", y(yVal(d))).attr("r",2.8).attr("fill",c.color).attr("stroke","#080b0f").attr("stroke-width",1).attr("opacity",0.95);
     });
     // avg line if view avg
     if(view==="avg"){
@@ -435,37 +461,56 @@ function renderMainChart(){
     }
   });
   // overlay tooltip
-  const tooltip=d3.select("#tooltip");
-  const overlay=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent");
+    // compact tooltip inside chart (no cover) + highlight
+  let tt = d3.select("#mainChart").selectAll(".tooltip-compact").data([null]);
+  tt = tt.enter().append("div").attr("class","tooltip-compact").attr("id","ttCompact").merge(tt);
+  tt.style("display","none");
+  const hoverLine = g.append("line").attr("class","hover-line").attr("stroke","#2a364a").attr("stroke-dasharray","4 4").style("display","none");
+  const overlay=g.append("rect").attr("width",w).attr("height",h).attr("fill","transparent").style("cursor","crosshair");
   overlay.on("mousemove", (event)=>{
-    const [mx]=d3.pointer(event);
+    const [mx,my]=d3.pointer(event);
     const year=Math.round(xMain.invert(mx));
     const clamped=Math.max(startYear, Math.min(endYear, year));
     const xPos=xMain(clamped);
-    g.selectAll(".hover-line").remove();
-    g.append("line").attr("class","hover-line").attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h).attr("stroke","#2a364a").attr("stroke-dasharray","4 4");
-    let html=`<div class="tt-date">${clamped} ${clamped===2026?'(proyección)':''}</div>`;
+    hoverLine.style("display",null).attr("x1",xPos).attr("x2",xPos).attr("y1",0).attr("y2",h);
+    const dsTT = (typeof getDataset==='function'? getDataset(): rawByCountry);
+    let best=null, bestDist=Infinity;
     order.forEach(k=>{
       if(!active.has(k)) return;
-      const c=rawByCountry[k];
-      const dsTT = (typeof getDataset==='function'? getDataset(): rawByCountry);
-      const v=dsTT[k].vals[clamped];
-      if(v==null) return;
-      const cum=computeCumulative(startYear,endYear)[k][clamped];
-      let valStr;
-      if(isNominal) valStr = "$"+v.toFixed(0)+"B";
-      else valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
-      const col=v>=0?"#2ecc71":"#ff6b6b";
-      html+=`<div class="tt-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><span style="text-align:right"><strong>${valStr}</strong>${view==="growth" && clamped>=2000? `<br><span style="color:${col};font-size:11px">${v>0?"+":""}${v.toFixed(1)}%</span>`:""}</span></div>`;
+      const v=dsTT[k].vals[clamped]; if(v==null) return;
+      const yv = view==="cum" ? computeCumulative(startYear,endYear)[k][clamped] : v;
+      const yp = y(yv);
+      const dist=Math.abs(yp - my);
+      if(dist<bestDist){bestDist=dist; best=k;}
     });
-    tooltip.html(html).style("display","block");
-    const rect=div.getBoundingClientRect();
-    let left=event.clientX - rect.left +14;
-    if(left+260>rect.width) left=event.clientX - rect.left -274;
-    tooltip.style("left", left+"px").style("top", (event.clientY - rect.top -10)+"px");
+    if(!best) return;
+    highlightLine(best);
+    const keys = best==="ZJ" ? ["ZJ"] : (active.has("ZJ") ? [best,"ZJ"] : [best]);
+    let html=`<div class="tt-date">${clamped} ${clamped===2026?'<span style="color:var(--accent-2)">· proy.</span>':''}</div>`;
+    keys.forEach(k=>{
+      const c=rawByCountry[k];
+      const v=dsTT[k].vals[clamped]; if(v==null) return;
+      const cum=computeCumulative(startYear,endYear)[k][clamped];
+      const isNom = (typeof metric!=="undefined" && metric==="nominal");
+      let valStr;
+      if(isNom) valStr = "$"+v.toFixed(0)+"B";
+      else valStr = view==="cum" ? cum.toFixed(1) : v.toFixed(2)+"%";
+      const col=v>=0? "var(--pos)":"var(--neg)";
+      html+=`<div class="tt-row"><span style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${c.color};display:inline-block"></span>${c.name}</span><strong style="color:${col}">${valStr}</strong></div>`;
+    });
+    if(keys.length===1) html+=`<div style="font-size:10px;color:var(--muted);margin-top:4px;border-top:1px dashed var(--line);padding-top:4px">Hover leyenda para resaltar · Click para aislar · Shift+click toggle</div>`;
+    tt.html(html).style("display","block");
+    const ttNode=tt.node(); const ttW=160, ttH=ttNode.offsetHeight||70;
+    let left = xPos < w*0.62 ? xPos + 14 : xPos - ttW - 14;
+    left = Math.max(8, Math.min(w - ttW - 8, left));
+    let top = y(dsTT[best].vals[clamped] ?? 0);
+    if(view==="cum") top = y(computeCumulative(startYear,endYear)[best][clamped]);
+    top = top - ttH/2;
+    top = Math.max(8, Math.min(h - ttH - 8, top));
+    tt.style("left", left+"px").style("top", top+"px");
   }).on("mouseleave", ()=>{
-    g.selectAll(".hover-line").remove();
-    tooltip.style("display","none");
+    hoverLine.style("display","none"); tt.style("display","none");
+    highlightLine(isolatedKey||null);
   });
 }
 
@@ -627,6 +672,7 @@ function renderAll(){
   renderCumChart();
   renderTable();
   renderBrush();
+  if(typeof isolatedKey!=="undefined" && isolatedKey) setTimeout(()=>highlightLine(isolatedKey),60);
 }
 
 document.getElementById("search").addEventListener("input", renderTable);
