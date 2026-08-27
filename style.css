@@ -18,13 +18,13 @@
   --accent-line:rgba(142,160,184,0.18);
   --pos:#8FB3A5;
   --neg:#C48B8D;
-  --cl:#7B9BBD;
-  --co:#BDA67D;
-  --br:#8EB0A6;
-  --mx:#B17A68;
-  --pe:#9A90BB;
-  --ar:#A9AB9E;
-  --latam:#8E97A8;
+  --cl:#8CADCF;
+  --co:#CFB88E;
+  --br:#9BC7BA;
+  --mx:#C58B78;
+  --pe:#ABA0CE;
+  --ar:#C0C4A8;
+  --latam:#98A7C1;
   --radius:6px;
   --radius-lg:8px;
 }
@@ -107,7 +107,7 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .toggles{display:flex;gap:6px;flex-wrap:wrap}
 .chart{width:100%;height:440px;position:relative}
 .chart-sm{height:340px}
-.chart-footer{display:flex;justify-content:space-between;color:var(--muted2);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;margin-top:6px;opacity:0.8}
+.chart-footer{display:flex;justify-content:space-between;gap:12px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:0.03em;margin-top:4px;opacity:0.75;line-height:1.4;text-transform:none}
 .grid-2{display:grid;grid-template-columns:1.45fr 0.9fr;gap:14px}
 @media(max-width:1000px){.grid-2{grid-template-columns:1fr}}
 .var-table{width:100%;overflow:auto}

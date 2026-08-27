@@ -1,6 +1,6 @@
 # LatAm Growth Monitor — 2000·2026
 
-Monitor profesional del **crecimiento económico en Latinoamérica** — PIB real, var. anual %. Estilo económico oscuro (FT/Bloomberg), interactivo con D3.js.
+PIB real, var. anual % 2000–2026 — Chile, Colombia, Brasil, México, Perú, Argentina y LatAm. D3.js, datos WB WDI.
 
 **Live:** `https://kiltro-dev.github.io/economics/`
 
@@ -11,13 +11,13 @@ Monitor profesional del **crecimiento económico en Latinoamérica** — PIB rea
 - **Interactividad:** leyenda filtrable, tooltip, brush, tabla filtrada por periodo, export CSV
 
 ## KPIs dinámicos
-Promedio, total acumulado, CAGR, min/max para el periodo seleccionado. Insight contextual: trampa de bajo crecimiento (CEPAL: 4 años ~2.3%), década perdida 2015-2024 (+1.0% promedio LAC), rebote 2021 (+7.2% LAC).
+Promedio, total acumulado, CAGR, min/max para el periodo seleccionado. Insight: 4 años seguidos ~2.3% sin despegue, década 2015-2024 y rebote 2021.
 
 ## Datos
 - **Principal 2000-2025:** Banco Mundial WDI `NY.GDP.MKTP.KD.ZG` (precios de mercado, año calendario). Última actualización 2026-07-13.
 - **2026 forecast:** Banco Mundial GEP Jun-2025 (Chile 2.2, Colombia 2.7, Brasil 2.2, México 1.1, Perú 2.5, Argentina 4.5, LAC 2.4) — línea punteada.
 - **Contraste:** BCCh Anuario 2024 (Chile 2021 11.7% y 2024 2.6%), CEPAL Balance 2025, IMF WEO Abr-2026.
-- **Metodología:** CAGR = (Índice_fin/Índice_ini)^(1/años)-1. Acumulado = Π(1+g).
+- **Notas:** CAGR = (índice/100)^{1/n}−1; acumulado = Π(1+g); promedio = media; índice inicio-1=100.
 
 ## Stack
 D3.js v7, vanilla JS/CSS, sin build. Fuentes: Fraunces (títulos), IBM Plex Mono (números), Inter (cuerpo).
