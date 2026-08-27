@@ -64,12 +64,12 @@
     <div class="card">
       <h3>Ranking — promedio del periodo</h3>
       <p class="card-desc">Promedio anual del periodo seleccionado.</p>
-      <div id="barChart" style="height:360px"></div>
+      <div id="barChart" class="chart" style="height:auto;min-height:320px"></div>
     </div>
     <div class="card">
       <h3>Acumulado desde inicio</h3>
       <p class="card-desc">Índice inicio = 100.</p>
-      <div id="cumChart" class="chart chart-sm"></div>
+      <div id="cumChart" class="chart" style="height:auto;min-height:320px"></div>
     </div>
   </section>
 
@@ -275,7 +275,7 @@ function renderMain(){
 function renderBar(){
   const div=document.getElementById("barChart");
   div.innerHTML="";
-  const W=div.clientWidth, H=360, m={top:20,right:14,bottom:24,left:110}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const W=div.clientWidth, H=Math.round(Math.max(320, Math.min(380, W*0.32))), m={top:20,right:14,bottom:24,left:110}, w=W-m.left-m.right, h=H-m.top-m.bottom;
   const svg=d3.select("#barChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).style("width","100%").style("height","auto");
   const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
   const st=statsFor(startYear,endYear);
@@ -293,7 +293,7 @@ function renderBar(){
 function renderCum(){
   const div=document.getElementById("cumChart");
   div.innerHTML="";
-  const W=div.clientWidth, H=340, m={top:10,right:14,bottom:28,left:44}, w=W-m.left-m.right, h=H-m.top-m.bottom;
+  const W=div.clientWidth, H=Math.round(Math.max(320, Math.min(360, W*0.42))), m={top:10,right:14,bottom:28,left:44}, w=W-m.left-m.right, h=H-m.top-m.bottom;
   const svg=d3.select("#cumChart").append("svg").attr("viewBox",`0 0 ${W} ${H}`).style("width","100%").style("height","auto");
   const g=svg.append("g").attr("transform",`translate(${m.left},${m.top})`);
   const years=getYears(), cum=cumFor(startYear,endYear);

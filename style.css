@@ -106,8 +106,8 @@ a:hover{color:var(--ink);text-decoration-color:var(--ink2)}
 .legend-item.off{opacity:0.35;text-decoration:line-through}
 .legend-item .dot{width:7px;height:7px;border-radius:50%}
 .toggles{display:flex;gap:6px;flex-wrap:wrap}
-.chart{width:100%;height:440px;position:relative}
-.chart-sm{height:340px}
+.chart{width:100%;height:auto;min-height:320px;position:relative}
+.chart-sm{height:auto;min-height:320px}
 .chart-footer{display:flex;justify-content:space-between;gap:12px;color:var(--muted2);font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:0.03em;margin-top:2px;padding-top:0;opacity:0.65;line-height:1.3;text-transform:none;border-top:none}
 .grid-2{display:grid;grid-template-columns:1.45fr 0.9fr;gap:14px}
 @media(max-width:1000px){.grid-2{grid-template-columns:1fr}}
