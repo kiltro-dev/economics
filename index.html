@@ -64,6 +64,7 @@
       </div>
       <div class="controls">
         <div class="legend" id="legend"></div>
+        <div id="selectionInfo" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;min-height:14px"></div>
       </div>
     </div>
     <div id="mainChart" class="chart"></div>
@@ -307,6 +308,20 @@ let isolatedKey=null;
 let hoveredKey=null;
 function highlightLine(k){
   hoveredKey=k;
+  const info=document.getElementById("selectionInfo");
+  if(k){
+    const col=rawByCountry[k].color;
+    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Hover: <strong style="color:var(--ink)">${rawByCountry[k].name}</strong> · Click para fijar · Shift+click multi</span>`;
+  } else if(typeof isolatedKey!=="undefined" && isolatedKey){
+    const col=rawByCountry[isolatedKey].color;
+    if(info) info.innerHTML=`<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:7px;height:7px;border-radius:50%;background:${col};display:inline-block"></span>Fijado: <strong style="color:var(--ink)">${rawByCountry[isolatedKey].name}</strong> · Click de nuevo para soltar</span>`;
+  } else if(info){
+    const n=active.size;
+    if(n===7) info.textContent="Todos activos · Click para aislar un país · Shift+click para comparar 2-3";
+    else info.textContent=`Seleccionados: ${Array.from(active).map(k=>rawByCountry[k].name).join(", ")} (${n}) · Doble click para reset`;
+  }
+  // original logic below
+
   d3.selectAll("#mainChart .line-base").classed("line-dim", false).classed("line-focus", false);
   d3.selectAll("#mainChart .dot").classed("dot-dim", false).classed("dot-focus", false);
   if(!k) return;
@@ -676,6 +691,7 @@ function renderAll(){
   renderTable();
   renderBrush();
   if(typeof isolatedKey!=="undefined" && isolatedKey) setTimeout(()=>highlightLine(isolatedKey),60);
+  else setTimeout(()=>highlightLine(null),30);
 }
 
 document.getElementById("search").addEventListener("input", renderTable);
